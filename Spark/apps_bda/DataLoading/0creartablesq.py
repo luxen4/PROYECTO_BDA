@@ -77,14 +77,15 @@ def dataframe_wcliente():
     try:
         
         bucket_name = 'my-local-bucket' 
-        file_name = 'data_clientes'
-        df_clientes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        file_name = 'clientes_data_2'
+        #df_clientes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        df_clientes = spark.read.option("multiline", "true").json(f"s3a://{bucket_name}/{file_name}")
         df_clientes.show()
         
         bucket_name = 'my-local-bucket' 
         file_name='data_reservas'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_reservas.show()
+        #df_reservas.show()
         
         
         df = df_clientes.join(df_reservas.select("id_cliente","fecha_entrada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
@@ -130,7 +131,7 @@ def dataframe_wcliente():
         print("error reading TXT")
         print(e)
 
-
+dataframe_wcliente()
 
 
 
@@ -232,7 +233,7 @@ def createTable_wHoteles():
         print(e)  
 
 
-dataframe_wcliente()
+
 ###
 #    createTable_WClientes()
 #    createTable_wRestaurantes()

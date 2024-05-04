@@ -11,7 +11,7 @@ pip3 install kafka-python==2.0.2
                                                                                                           
 # cd '.\Tema 4\'
 # cd .\Spark\
-# docker exec -it 2f0b277a0216364301cab588f619d4f7477c16870fd62875e8c8a7d9942fbf62 /bin/bash   # casa  
+# docker exec -it 8941fc18ee183cafc21410946e1bd15af6fc90ebddf541b8565041860ffe7091 /bin/bash   # casa  
 # docker exec -it 296f24ddfe050cf2c3e6a4e59ce62af4e4c64ab3778606eb4e0f8c86ed036edc /bin/bash   # clase
 # cd /opt/spark-apps     cd /opt/spark-data/sales
 # python prueba.py
@@ -69,7 +69,7 @@ Para el contenedor de spark
 
 ### Entrar al locastack ##
 
-# docker exec -it f63549b22ffcffd1338773608cb610b8d77f4a84669995a05333b8899c534ffc /bin/bash    # casa
+# docker exec -it fdbf6d9573541d226b8ec95b05e4f2158627a8d0d77b6b99f8976839e720a4d7 /bin/bash    # casa
 # docker exec -it 296f24ddfe050cf2c3e6a4e59ce62af4e4c64ab3778606eb4e0f8c86ed036edc /bin/bash    # clase
 
     # Crear un bucket por comando    ---> awslocal s3api create-bucket --bucket my-local-bucket

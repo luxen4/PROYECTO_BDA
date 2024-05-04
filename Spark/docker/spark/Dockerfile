@@ -10,7 +10,7 @@ RUN pip3 install pyspark
 
 RUN pip3 install pandas==1.0.5
 
-
+RUN pip3 install pyspark pymongo
 
 RUN apt-get update && apt-get install -y libpq-dev
 RUN pip3 install psycopg2

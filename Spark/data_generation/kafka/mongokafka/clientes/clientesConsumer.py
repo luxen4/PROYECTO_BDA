@@ -27,8 +27,6 @@ df =spark  \
   .load()'''
   
   
-  
-  
 # Rafa  
 df =spark  \
   .readStream \
@@ -38,9 +36,6 @@ df =spark  \
   .option("failOnDataLoss",'false') \
   .load()
   
-  
-
-
 schema = StructType() \
     .add("id_cliente", StringType()) \
     .add("nombre", StringType()) \
@@ -58,8 +53,8 @@ query = df \
     .writeStream \
     .outputMode("append") \
     .format("json") \
-    .option("path", "s3a://my-local-bucket/clientes_data_2") \
-    .option("checkpointLocation", "s3a://my-local-bucket/clientes_data_2_check")\
+    .option("path", "s3a://my-local-bucket/data_clientes") \
+    .option("checkpointLocation", "s3a://my-local-bucket/clientes")\
     .option("multiline", "true")\
     .start()
 
