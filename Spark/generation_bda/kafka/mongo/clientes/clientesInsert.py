@@ -12,13 +12,14 @@ def read_json_file(filename):
     try:
         with open(filename, 'r') as file:
             data = json.load(file)
+            print(data)
             return data
     except FileNotFoundError:
         return None
 
-filename='./../data_Prim_ord/json/clientes.json'
+#filename='./../data_Prim_ord/json/cligentes.json'
+filename='./../../../../data_bda/json/clientes.json'
 clients = read_json_file(filename)
-
 
 clients_collection.insert_one({"clients": clients}) # Inserta la lista de clients
 
@@ -26,7 +27,6 @@ clients_collection.insert_one({"clients": clients}) # Inserta la lista de client
 print("Contenido de la colección 'clients':")       # Imprimir
 for clients in clients_collection.find():
     print(clients)
-    
     
 ### OK ###
     

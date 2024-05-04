@@ -17,6 +17,8 @@ spark = SparkSession.builder \
 .master("spark://spark-master:7077") \
 .getOrCreate()
 
+
+
 '''
 df =spark  \
   .readStream \

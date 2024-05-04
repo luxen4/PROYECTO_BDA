@@ -60,7 +60,7 @@ def read_csv_fileMenus(filename):
             menus.append(menu)
         return menus
 
-filename = "./../../../data_Prim_ord/csv/menu.csv"
+filename = "./menu/menu.csv"
 menus = read_csv_fileMenus(filename)
 
 
@@ -87,7 +87,7 @@ def read_csv_filePlatos(filename):
             platos.append(plato)
         return platos
 
-filename = "./../../../data_Prim_ord/csv/platos.csv"
+filename = "./plato/platos.csv"
 platos = read_csv_filePlatos(filename)
 
 
@@ -115,7 +115,7 @@ def read_json_fileRelaciones(filename):
     
 
 
-filename = "./../../../data_Prim_ord/json/relaciones.json"
+filename = "./relaciones/relaciones.json"
 relaciones = read_json_fileRelaciones(filename)
 
 

@@ -16,7 +16,7 @@ def sesionSpark():
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .config("spark.driver.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
         .config("spark.executor.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-        .config("spark.jars","./../postgresql-42.7.3.jar") \
+        .config("spark.jars","./postgresql-42.7.3.jar") \
         .config("spark.driver.extraClassPath", "/opt/spark-apps/postgresql-42.7.3.jar") \
         .master("local[*]") \
         .getOrCreate()
@@ -64,6 +64,10 @@ def leerPostgres():
     resultado.show()
     
     
+
+    
+    
+    
     resultado \
     .write \
     .option('header', 'true') \
@@ -84,5 +88,18 @@ def leerPostgres():
 leerPostgres()
 
 # resultado.write.csv("s3a://my-local-bucket/empleados1.csv", header=True, mode="overwrite")
+
+'''
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+# Definir el esquema para los datos
+schema = StructType([
+    StructField("id_hotel", IntegerType(), True),
+    StructField("nombre_hotel", StringType(), True),
+    StructField("direccion_hotel", StringType(), True),
+    StructField("empleados", StringType(), True)
+])'''
+    
+   
+    
 
 

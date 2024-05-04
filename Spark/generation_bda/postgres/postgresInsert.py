@@ -28,7 +28,7 @@ def createTable_hoteles():
         print("An error occurred while creating the table:")
         print(e)
    
-   
+
      
 def insertar_Hoteles(id_hotel, nombre_hotel, direccion_hotel, empleados):
     
@@ -45,6 +45,11 @@ def insertar_Hoteles(id_hotel, nombre_hotel, direccion_hotel, empleados):
     connection.close()
 
     print("Datos cargados correctamente en tabla HOTELES.")
+
+
+
+
+
      
         
         
@@ -91,8 +96,10 @@ def insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion):
     print("Datos cargados correctamente en tabla EMPLEADOS.")
      
      
-createTable_hoteles()
-createTable_empleados()
+
+
+
+
 
 # leer el csv
 import csv
@@ -109,8 +116,7 @@ def readCSV_Hoteles(filename):
             insertar_Hoteles(id_hotel, nombre_hotel, direccion_hotel, empleados)
             
     
-filename="./../data_Prim_ord/csv/hoteles.csv"
-readCSV_Hoteles(filename)
+
 
 
 ### QUE LEA OTRO ARCHIVO DE JSON ###
@@ -124,7 +130,15 @@ def readCSV_Empleados(filename):
             posicion = row[2]
             fecha_contratacion = row[3]
             insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion)
+ 
+ 
+ 
+
+createTable_hoteles()
+filename="./hoteles.csv"
+readCSV_Hoteles(filename)
+ 
             
-    
-filename="./../data_Prim_ord/csv/empleados.csv"
+createTable_empleados()
+filename="./empleados.csv"
 readCSV_Empleados(filename)

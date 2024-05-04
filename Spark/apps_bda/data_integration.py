@@ -24,15 +24,14 @@ try:
     spark=sesionSpark()
     
     # csv
-    df = spark.read.csv("./habitaciones.csv")
-    ruta_salida = "s3a://my-local-bucket/habitaciones.csv"
+    df = spark.read.csv("./../spark-data/csv/habitaciones.csv")
+    ruta_salida = "s3a://my-local-bucket/habitaciones_data.csv"
     df=df.write.csv(ruta_salida, mode="overwrite")
-
-    '''
+    
     # json
-    df = spark.read.option("multiline", "true").json("./../data_Prim_ord/json/restaurantes.json")
-    ruta_salida = "s3a://my-local-bucket/restaurantes.json"
-    df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")'''
+    df = spark.read.option("multiline", "true").json("./../spark-data/json/restaurantes.json")
+    ruta_salida = "s3a://my-local-bucket/restaurantes_data.json"
+    df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")
     
     spark.stop()
 
@@ -48,3 +47,5 @@ except Exception as e:
 
 # Listar los archivos del bucket
 #   awslocal s3 ls s3://my-local-bucket
+
+### OK ###

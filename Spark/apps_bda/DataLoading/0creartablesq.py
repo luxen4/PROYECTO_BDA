@@ -77,7 +77,7 @@ def dataframe_wcliente():
     try:
         
         bucket_name = 'my-local-bucket' 
-        file_name = 'clientes_data_2'
+        file_name = 'data_clientes'
         #df_clientes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df_clientes = spark.read.option("multiline", "true").json(f"s3a://{bucket_name}/{file_name}")
         df_clientes.show()
@@ -85,37 +85,40 @@ def dataframe_wcliente():
         bucket_name = 'my-local-bucket' 
         file_name='data_reservas'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        #df_reservas.show()
+        df_reservas.show()
         
         
         df = df_clientes.join(df_reservas.select("id_cliente","fecha_entrada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
-        #df.show()
+        df.show()
 
         bucket_name = 'my-local-bucket'
         file_name = 'data_hoteles.csv' # este es directo al S3
         df_hoteles = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        #df_hoteles.show()
+        df_hoteles.show()
         
         
         df = df.join(df_hoteles.select("id_hotel","id_restaurante","nombre"), "id_hotel", "left")
-        #df.show()
+        df.show()
        
         bucket_name = 'my-local-bucket'
-        file_name = 'data_restaurantes.csv' # este es directo al S3
-        df_restaurantes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-      
+        file_name = 'restaurantes.json' 
+        df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
+        
+        df_restaurantes.show()
+        
+        
         df = df.join(df_restaurantes.select("id_hotel","id_restaurante","nombre"), "id_hotel", "left")
-        #df.show()
+        
         
         '''
         # Agrupar"
         df = df[[col for col in df.columns if col != "preferencias_alimenticias"]]
         df = df[[col for col in df.columns if col != "direccion"]]'''
         
-        df = df.dropDuplicates()    # Eliminar registros duplicados
+        # df = df.dropDuplicates()    # Eliminar registros duplicados
 
         # Mostrar el DataFrame resultante
-        #df.show()
+        df.show()
         '''
         # No tocar que es OK
         for row in df.select("*").collect():   
@@ -235,7 +238,7 @@ def createTable_wHoteles():
 
 
 ###
-#    createTable_WClientes()
+createTable_WClientes()
 #    createTable_wRestaurantes()
 #    createTable_wReservas()
 #    createTable_wHoteles()

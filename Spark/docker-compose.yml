@@ -10,6 +10,7 @@ services:
     volumes:
       - ./apps_bda:/opt/spark-apps
       - ./data_bda:/opt/spark-data
+      - ./generation_bda:/opt/spark-generation
     environment:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_WORKLOAD=master
@@ -34,6 +35,7 @@ services:
     volumes:
       - ./apps_bda:/opt/spark-apps
       - ./data_bda:/opt/spark-data
+      - ./generation_bda:/opt/spark-generation
 
   spark-worker-b:
     build:
@@ -55,6 +57,7 @@ services:
     volumes:
       - ./apps_bda:/opt/spark-apps
       - ./data_bda:/opt/spark-data
+      - ./generation_bda:/opt/spark-generation
 
   
   database:
