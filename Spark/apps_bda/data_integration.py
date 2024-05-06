@@ -24,7 +24,7 @@ try:
     spark=sesionSpark()
     
     # csv
-    df = spark.read.csv("./../spark-data/csv/habitaciones.csv")
+    df = spark.read.csv("./../spark-bda/csv/generar/habitaciones2.csv")
     ruta_salida = "s3a://my-local-bucket/habitaciones_data.csv"
     df=df.write.csv(ruta_salida, mode="overwrite")
     

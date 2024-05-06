@@ -42,7 +42,7 @@ schema = StructType() \
     .add("id_cliente", StringType()) \
     .add("nombre", StringType()) \
     .add("direccion", StringType()) \
-    .add("preferencias", StringType())
+    .add("preferencias_alimenticias", StringType())
      
 
 # Convert value column to JSON and apply schema

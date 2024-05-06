@@ -84,8 +84,34 @@ def informacion():
     print("\n 9. Análisis de mercado " +
             "¿Cómo se comparan los precios de las habitaciones de los distintos hoteles y " +
             "existen valores atípicos?")
+    
+    
+    print("\n 11. ¿Qué clientes han hecho reservas " + 
+             "y cuáles son sus preferencias de habitación y comida?")
+    
+    print("\n 12. ¿Qué habitaciones hay reservadas para cada reserva, " + 
+          " y cuáles son sus respectivas categorías y tarifas nocturnas?")
+    
+    
+    print("\n 13. ¿Quiénes son los empleados que trabajan en cada restaurante, " + 
+          "junto con sus cargos y fechas de contratación?")
+    
+    print("\n 14.  ¿Cuántas reservas se hicieron para cada categoría de habitación, y " +
+               "cuáles son las correspondientes preferencias de comida de los clientes?")
+    
+    
 
     print("\n 10. Salir")
+    
+
+    
+    
+    
+    
+    
+
+
+import consulta1
 
 salir=False
 while salir == False:
@@ -94,6 +120,10 @@ while salir == False:
     
     if opcion == 1:
         opcion1()
+        
+        consulta1.select()
+        salir = input("\n Quiere seguir? \n")
+        
     elif opcion == 2:
         opcion2()
     elif opcion == 3:

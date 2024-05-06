@@ -34,7 +34,7 @@ for client in resultados:
             "id_cliente": id_cliente,
             "nombre": nombre,
             "direccion": direccion,
-            "preferencias": preferencias_alimenticias
+            "preferencias_alimenticias": preferencias_alimenticias
         }
         print(message)
         producer.send('info', value=message)

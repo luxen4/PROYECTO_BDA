@@ -59,28 +59,22 @@ def leerPostgres():
     df = spark.read.jdbc(url=jdbc_url, table="hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    #resultado = spark.sql("SELECT * FROM tabla_spark WHERE store_name ='" + store_name + "';")
     resultado = spark.sql("SELECT * FROM tabla_spark;")
     resultado.show()
     
     
-
-    
-    
-    
     resultado \
     .write \
-    .option('header', 'true') \
     .option('fs.s3a.committer.name', 'partitioned') \
     .option('fs.s3a.committer.staging.conflict-mode', 'replace') \
     .option("fs.s3a.fast.upload.buffer", "bytebuffer")\
     .mode('overwrite') \
-    .csv(path='s3a://my-local-bucket/data_hoteles.csv', sep=',')
-
-
+    .json(path='s3a://my-local-bucket/data_hoteles.json')                   ### OK ###
+    
     bucket_name = 'my-local-bucket'
-    file_name='data_hoteles.csv'
-    df_original = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+    file_name='data_hoteles.json'
+    df_original = spark.read.json(f"s3a://{bucket_name}/{file_name}")
+    
     
     df_original.show()
     spark.stop()
