@@ -66,5 +66,6 @@ def read_text_file(filename):
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
 
-filename='./../../../../data_Prim_ord/text/reservas.txt'
+#filename='./../../../../data_Prim_ord/text/reservas.txt'
+filename = "./../../../data_bda/text/reservas.txt"
 read_text_file(filename)

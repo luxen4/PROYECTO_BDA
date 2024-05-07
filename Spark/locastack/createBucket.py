@@ -1,17 +1,12 @@
 import boto3
 
-# Create an S3 client instance
-s3 = boto3.client(
-    's3',
-    endpoint_url='http://localhost:4566',   # LocalStack endpoint URL
-    aws_access_key_id='test',               # dummy access key (LocalStack default)
-    aws_secret_access_key='test',           # dummy secret key (LocalStack default)
-)
-
-# Define the bucket name
-bucket_name = 'my-local-bucket'
-
-# Create the bucket
-s3.create_bucket(Bucket=bucket_name)
+s3 = boto3.client('s3', endpoint_url='http://localhost:4566', aws_access_key_id='test', aws_secret_access_key='test',)
+bucket_name = 'my-local-bucket'         # Define the bucket name
+s3.create_bucket(Bucket=bucket_name)    # Create the bucket
 
 print(f"Bucket '{bucket_name}' created successfully.")
+
+
+# Create an S3 client instance
+# Crear un bucket por comando    ---> awslocal s3api create-bucket --bucket my-local-bucket
+# Listar los archivos del bucket ---> awslocal s3 ls s3://my-local-bucket

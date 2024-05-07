@@ -2,7 +2,7 @@
 # docker-compose up -d
 
 
-pip3 install kafka-python==2.0.2
+
 
 
 ###############
@@ -11,10 +11,13 @@ pip3 install kafka-python==2.0.2
                                                                                                           
 # cd '.\Tema 4\'
 # cd .\Spark\
-# docker exec -it 8941fc18ee183cafc21410946e1bd15af6fc90ebddf541b8565041860ffe7091 /bin/bash   # casa  
+# docker exec -it 518785959db72faf50cd5b2aca25643b864ab58dfdb5c123ab56fa97bc2271fa /bin/bash   # casa  
 # docker exec -it 296f24ddfe050cf2c3e6a4e59ce62af4e4c64ab3778606eb4e0f8c86ed036edc /bin/bash   # clase
 # cd /opt/spark-apps     cd /opt/spark-data/sales
 # python prueba.py
+
+
+
 
 
 
@@ -51,7 +54,7 @@ Puerto BBDD: 9999
 ######
 Librerías
 ######
-
+# pip3 install kafka-python==2.0.2
 # python3 -m pip install numpy
 # python3 -m pip install pandas>=1.0.5
 # pip3 install sqlalchemy
@@ -69,7 +72,7 @@ Para el contenedor de spark
 
 ### Entrar al locastack ##
 
-# docker exec -it 41fdbaec400ae77639644370a42e71d2ab95a5fcc146e73ff8a4fbae53017379 /bin/bash    # casa
+# docker exec -it e43135d670717111f3876b400495c8127c9f834b63a5bfbe4379487585f5d07f /bin/bash    # casa
 # docker exec -it 296f24ddfe050cf2c3e6a4e59ce62af4e4c64ab3778606eb4e0f8c86ed036edc /bin/bash    # clase
 
     # Crear un bucket por comando    ---> awslocal s3api create-bucket --bucket my-local-bucket

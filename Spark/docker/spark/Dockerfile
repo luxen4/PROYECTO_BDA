@@ -18,7 +18,6 @@ RUN pip3 install psycopg2
 RUN pip3 install awscli-local
 
 
-
 # Fix the value of PYTHONHASHSEED
 # Note: this is needed when you use Python 3.3 or greater
 ENV SPARK_VERSION=3.5.1 \

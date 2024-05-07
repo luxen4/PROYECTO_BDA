@@ -38,14 +38,3 @@ try:
 except Exception as e:
     print("error reading TXT")
     print(e)
-
-
-
-
-# Crear el bucket por comando
-#   awslocal s3api create-bucket --bucket my-local-bucket
-
-# Listar los archivos del bucket
-#   awslocal s3 ls s3://my-local-bucket
-
-### OK ###

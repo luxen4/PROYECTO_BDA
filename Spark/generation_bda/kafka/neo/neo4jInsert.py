@@ -60,9 +60,9 @@ def read_csv_fileMenus(filename):
             menus.append(menu)
         return menus
 
-filename = "./menu/menu.csv"
-menus = read_csv_fileMenus(filename)
 
+filename = "./../../../data_bda/csv/menu.csv"
+menus = read_csv_fileMenus(filename)
 
 with neo4j_client._driver.session() as session:
     
@@ -87,22 +87,23 @@ def read_csv_filePlatos(filename):
             platos.append(plato)
         return platos
 
-filename = "./plato/platos.csv"
+
+# Inserta desde un csv a neo4j
+filename = "./../../../data_bda/csv/platos.csv"
 platos = read_csv_filePlatos(filename)
 
-
 with neo4j_client._driver.session() as session:
-    
     for plato in platos:
         platoID = plato['platoID']
         nombre = plato['nombre']
         ingredientes = plato['ingredientes'] 
         alergenos = plato['alergenos']
         
-        
         plat = neo4j_client.create_plato(session,  platoID, nombre, ingredientes, alergenos)
         print(f"Plato creado: {plato['platoID']}, nombre: {plato['nombre']}, ingredientes: {plato['ingredientes']}, alergenos: {plato['alergenos']}")
-
+#___
+    
+    
     
 # Function to read and return data from a JSON file
 def read_json_fileRelaciones(filename):
@@ -112,15 +113,12 @@ def read_json_fileRelaciones(filename):
             return data
     except FileNotFoundError:
         return None    
-    
 
-
-filename = "./relaciones/relaciones.json"
+# Inserta desde un json en neo4j
+filename = "./../../../data_bda/json/relaciones.json"
 relaciones = read_json_fileRelaciones(filename)
 
-
 with neo4j_client._driver.session() as session:
-    
     for relacion in relaciones:
         id_menu = relacion['id_menu']
         id_restaurante = relacion['id_restaurante']
@@ -128,7 +126,5 @@ with neo4j_client._driver.session() as session:
         relac = neo4j_client.create_relacion(session,  id_menu, id_restaurante)
         
         print(f"Relación creada -> id_menu: {relacion['id_menu']}, id_restaurante: {relacion['id_restaurante']}")
-
-
 neo4j_client.close()
- 
+#___ 
