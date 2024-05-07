@@ -53,6 +53,9 @@ query = df \
     .option("multiline", "true")\
     .start()
 
+
+# Este que lo haga json, por variar un poco
+
 '''
 query = df \
     .writeStream \

@@ -12,7 +12,7 @@
 # cd '.\Tema 4\'
 # cd .\Spark\
 # docker exec -it 518785959db72faf50cd5b2aca25643b864ab58dfdb5c123ab56fa97bc2271fa /bin/bash   # casa  
-# docker exec -it 296f24ddfe050cf2c3e6a4e59ce62af4e4c64ab3778606eb4e0f8c86ed036edc /bin/bash   # clase
+# docker exec -it b17b7945d0d028dfc3b28a0892fb5ebbfd57e36d63ce2077ccf0b8f2e52dce65 /bin/bash   # clase
 # cd /opt/spark-apps     cd /opt/spark-data/sales
 # python prueba.py
 
@@ -277,3 +277,12 @@ PS C:\Users\Adrian\Downloads\BDA_Adrian> git reset --soft HEAD~1
 PS C:\Users\Adrian\Downloads\BDA_Adrian> git reset HEAD .
 git rm --cached 'Tema 4/Spark/cont_Neo4j/transactions/neo4j/neostore.transaction.db.0'
 git rm --cached 'Tema 4/Spark/cont_Neo4j/transactions/system/neostore.transaction.db.0'
+
+
+
+
+
+
+
+# Problemas de espacio.
+wsl.exe --unregister docker-desktop-data

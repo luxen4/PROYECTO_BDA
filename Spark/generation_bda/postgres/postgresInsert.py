@@ -109,6 +109,7 @@ def readCSV_Hoteles(filename):
         reader = csv.reader(file)
         next(reader)
         for row in reader:
+            print(row)
             id_hotel = row[0]
             nombre_hotel = row[1]
             direccion_hotel = row[2]
@@ -125,6 +126,7 @@ def readCSV_Empleados(filename):
         reader = csv.reader(file)
         next(reader)
         for row in reader:
+            print(row)
             id_empleado = row[0]
             nombre = row[1]
             posicion = row[2]
@@ -135,10 +137,10 @@ def readCSV_Empleados(filename):
  
 
 createTable_hoteles()
-filename="./hoteles.csv"
+filename="./../../data_bda/csv/hoteles.csv"
 readCSV_Hoteles(filename)
  
             
 createTable_empleados()
-filename="./empleados.csv"
+filename="./../../data_bda/csv/empleados.csv"
 readCSV_Empleados(filename)

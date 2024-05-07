@@ -38,3 +38,6 @@ try:
 except Exception as e:
     print("error reading TXT")
     print(e)
+    
+    
+# Función -> Sube directamente los archivos al bucket

@@ -29,4 +29,3 @@ for clients in clients_collection.find():
     print(clients)
     
 ### OK ###
-    
