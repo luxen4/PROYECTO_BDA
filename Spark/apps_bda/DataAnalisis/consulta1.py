@@ -28,7 +28,7 @@ def select():
     # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
     df_resultado = spark.sql(""" SELECT nombre_cliente, preferencias_comida FROM tabla_spark """)
 
-    # Mostrar el resultado de la consulta
+    print("¿Cuáles son las preferencias alimenticias más comunes entre los clientes?")
     df_resultado.show()
     spark.stop()
     

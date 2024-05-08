@@ -40,11 +40,8 @@ def select():
         GROUP BY nombre_hotel
     """)
     
+    print("¿Cuántos empleados tiene de media cada hotel?")
     
-    
-    
-
-    # Mostrar el resultado de la media de empleados por hotel
     media_empleados.show()
     spark.stop()
     

@@ -1,5 +1,4 @@
 from pyspark.sql import SparkSession
-# ¿Cuántas reservas se hicieron para cada categoría de habitación?
 
 def select():
 
@@ -31,9 +30,11 @@ def select():
     df_resultado = spark.sql("""SELECT hotel_name, numero_habitacion, tarifa_nocturna FROM tabla_spark;
                                 """)
 
-    # Mostrar el resultado de la consulta
+
     df_resultado.show()
     spark.stop()
     
 select()
 
+
+# "¿Cómo se comparan los precios de las habitaciones de los distintos hoteles existen valores atípicos?"

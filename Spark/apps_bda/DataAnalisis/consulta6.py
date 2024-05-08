@@ -72,3 +72,8 @@ def select2():
 select()
 select2()
 
+# "5.2.6 Análisis de menús \n" +
+# "¿Qué platos son los más y los menos populares entre los restaurantes?" +
+# "¿Hay ingredientes o alérgenos comunes que aparezcan con frecuencia en los platos?")
+
+

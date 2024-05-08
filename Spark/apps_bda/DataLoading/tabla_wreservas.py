@@ -25,6 +25,23 @@ def createTable_wReservas():
                 preferencia_comida VARCHAR (100)
             );
         """
+        
+        """ Meter esta
+        id_registro SERIAL PRIMARY KEY,
+        id_reserva VARCHAR (100),
+        cliente_name VARCHAR (100),
+        fecha_entrada DATE,
+        fecha_salida DATE,
+        nombre_hotel VARCHAR (100),
+        empleados VARCHAR (500),
+        categoria_habitacion VARCHAR (100),
+        tarifa_nocturna Decimal(10,2),
+        preferencia_comida VARCHAR (100),
+        restaurante_name VARCHAR (100)
+        """
+        
+        
+        
         cursor.execute(create_table_query)
         connection.commit()
         

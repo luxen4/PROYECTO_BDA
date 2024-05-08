@@ -22,6 +22,18 @@ def createTable_wRestaurantes():
         """
         
         
+        """ Hacer esto
+        id_registro SERIAL PRIMARY KEY,
+        id_reserva VARCHAR (100),
+        restaurante_name VARCHAR (100),
+        id_menu INTEGER,
+        _menu_name VARCHAR (100),   *Meter un nombre
+        plato_nombre VARCHAR (100)
+        alergenos VARCHAR (100)
+        menu_price DECIMAL(10,2)
+        """
+        
+        
         cursor.execute(create_table_query)
         connection.commit()
         

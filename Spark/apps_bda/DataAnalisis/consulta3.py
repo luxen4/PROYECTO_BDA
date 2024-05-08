@@ -24,14 +24,13 @@ def select1():
 
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
-
-    # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
     
     df_resultado = spark.sql("""SELECT AVG(DATEDIFF(fecha_salida, fecha_entrada)) AS duracion_media_estancia
                                             FROM tabla_spark;
                                 """)
-
-    # Mostrar el resultado de la consulta
+    
+    # "¿Cuál es la duración media de la estancia de los clientes de un hotel?
+    
     df_resultado.show()
     spark.stop()
     
@@ -126,6 +125,13 @@ print("Por Semanas")
 select2()
 print("Media por meses")
 select3()
+
+
+
+# "¿Cuál es la duración media de la estancia de los clientes de un hotel?
+# "¿Existen periodos de máxima ocupación en función de las fechas de reserva?")
+
+
 
 
 '''

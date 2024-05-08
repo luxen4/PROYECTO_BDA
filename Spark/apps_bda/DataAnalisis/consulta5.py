@@ -26,7 +26,7 @@ def select1():
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
+    print("¿Cuál es el índice de ocupación de cada hotel?")
     
     df_resultado = spark.sql("""SELECT hotel_name, count(id_reservas) FROM tabla_spark
                                 group by hotel_name
@@ -63,7 +63,7 @@ def select2():
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
+    print("¿Cuál es el índice de ocupación de cada hotel según la categoría de habitación?")
     
     df_resultado = spark.sql("""SELECT categoria, count(id_reservas) FROM tabla_spark;
                                 """)
@@ -100,7 +100,8 @@ def select3():
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
+    # "¿Podemos estimar los ingresos generados por cada hotel basándonos en los \n" +
+    # "precios de las habitaciones y los índices de ocupación?"
     
     df_resultado = spark.sql("""SELECT SUM(tarifa_nocturna), hotel_name FROM tabla_spark;
                                 """)
@@ -148,6 +149,13 @@ def select4():
     spark.stop()
     
     
-select()
+select1()
 select2()
 
+
+
+
+# "5.2.5 Ocupación e ingresos del hotel \n" +
+# "¿Cuál es el índice de ocupación de cada hotel y varía según la categoría de habitación?" +
+# "¿Podemos estimar los ingresos generados por cada hotel basándonos en los \n" +
+# "precios de las habitaciones y los índices de ocupación?"

@@ -1,5 +1,4 @@
 from pyspark.sql import SparkSession
-# ¿Cuántas reservas se hicieron para cada categoría de habitación?
 
 def select():
 
@@ -36,4 +35,12 @@ def select():
     spark.stop()
     
 select()
+
+
+
+# "¿Existen pautas en las preferencias de los clientes en función de la época del año?
+        #- Será hoteles preferidos en épocas por mes/o año
+        
+# "¿Los clientes con preferencias dietéticas específicas tienden a reservar en restaurantes concretos?")
+
 
