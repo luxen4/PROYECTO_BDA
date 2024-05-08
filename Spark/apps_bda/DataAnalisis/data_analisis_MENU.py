@@ -150,31 +150,7 @@ while salir == False:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 '''
-5 LOAD: Data Warehouse
-5.1 Data loading
-Los datos transformados se cargarán en Postgres para su análisis posterior en 4
-tablas distintas que responderán a las preguntas del Data analytics. Solo poner la
-información de cada tabla que sea interesante para resolver estas preguntas.
-5.2 Data analytics
-Usando Apache Spark tenéis que obtener los datos a través de postgres y realizar
-consultas que contengan análisis avanzados sobre los datos almacenados en el
-almacén de datos.
 5.2.1 Análisis de las preferencias de los clientes
 ¿Cuáles son las preferencias alimenticias más comunes entre los clientes?
 5.2.2 Análisis del rendimiento del restaurante:

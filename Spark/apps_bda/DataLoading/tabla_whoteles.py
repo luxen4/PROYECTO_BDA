@@ -192,3 +192,90 @@ reales realizadas?
 existen valores atípicos?'''
 
 
+
+
+'''
+# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
+def createTable_wRestaurantes():
+    try:
+        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+    
+        cursor = connection.cursor()
+        
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS w_restaurantes (
+                id_restaurante SERIAL PRIMARY KEY,
+                precio_menu DECIMAL(10,2),
+                nombre_plato VARCHAR (100),
+                alergenos VARCHAR (100)
+            );
+        """
+        cursor.execute(create_table_query)
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'W_RESTAURANTES' created successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)  
+
+
+
+# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
+def createTable_wReservas():
+    try:
+        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+    
+        cursor = connection.cursor()
+        
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS w_reservas (
+                id_reserva SERIAL PRIMARY KEY,
+                fecha_entrada DATE,
+                fecha_salida DATE,
+                nombre_hotel VARCHAR (100)
+            );
+        """
+        cursor.execute(create_table_query)
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'w_reservas' created successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)  
+
+
+# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
+def createTable_wHoteles():
+    try:
+        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+    
+        cursor = connection.cursor()
+        
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS w_reservas (
+                id_hotel SERIAL PRIMARY KEY,
+                empleados VARCHAR (100),
+                categoria_habitacion (100),
+                precio_habitacion DECIMAL(10,2)
+            );
+        """
+        cursor.execute(create_table_query)
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'w_reservas' created successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)  
+'''

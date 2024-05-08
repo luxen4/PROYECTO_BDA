@@ -23,9 +23,9 @@ def leerConSpark():
         #d f = spark.read.text("s3a://my-local-bucket/data_reservas")
         
         bucket_name = 'my-local-bucket' 
-        folder_name='data_hoteles.json'
-        #df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
-        df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
+        folder_name='data_reservas'
+        df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
+        #df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
         
         
         df.show()

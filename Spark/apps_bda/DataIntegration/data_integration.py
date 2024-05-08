@@ -24,12 +24,12 @@ try:
     spark=sesionSpark()
     
     # csv
-    df = spark.read.csv("./../spark-bda/csv/generar/habitaciones2.csv")
+    df = spark.read.csv("./../../spark-data/csv/habitaciones.csv")
     ruta_salida = "s3a://my-local-bucket/habitaciones_data.csv"
     df=df.write.csv(ruta_salida, mode="overwrite")
     
     # json
-    df = spark.read.option("multiline", "true").json("./../spark-data/json/restaurantes.json")
+    df = spark.read.option("multiline", "true").json("./../../spark-data/json/restaurantes.json")
     ruta_salida = "s3a://my-local-bucket/restaurantes_data.json"
     df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")
     

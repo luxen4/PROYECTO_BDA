@@ -34,9 +34,11 @@ schema = StructType() \
     .add("fecha_salida", StringType()) \
     .add("tipo_habitacion", StringType()) \
     .add("preferencias_comida", StringType()) \
-    .add("id_restaurante", StringType()) 
-
- 
+    .add("habitacion_id", StringType()) \
+    .add("id_restaurante", StringType())
+    
+    
+    
 
 # Convert value column to JSON and apply schema
 df = df.selectExpr("CAST(value AS STRING)") \
@@ -48,6 +50,7 @@ df = df.selectExpr("CAST(value AS STRING)") \
 # Print schema of DataFrame for debugging
 df.printSchema()
 
+
 query = df \
     .writeStream \
     .outputMode("append") \
@@ -58,6 +61,7 @@ query = df \
     .option("multiline", "true")\
     .start()
 
+
 '''
 query = df \
     .writeStream \
@@ -65,7 +69,12 @@ query = df \
     .format("console") \
     .start()
 '''
+
  
 
 # Wait for the termination of the querypython 
 query.awaitTermination()
+
+
+
+    

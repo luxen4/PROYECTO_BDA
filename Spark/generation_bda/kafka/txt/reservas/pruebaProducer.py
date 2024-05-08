@@ -1,10 +1,10 @@
 from time import sleep                      # Ejecutar con el botón derecho
 from json import dumps
-#from kafka import KafkaProducer
+from kafka import KafkaProducer
 from datetime import datetime
 import random  # Importa la librería random
                     
-#producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=lambda x: dumps(x).encode('utf-8'))
+producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=lambda x: dumps(x).encode('utf-8'))
 # producer = KafkaProducer(bootstrap_servers= ['kafka:9093'], value_serializer=lambda x: dumps(x).encode('utf-8'))
 
 # Function to read and display the contents of a text file
@@ -50,10 +50,11 @@ def read_text_file(filename):
                     "habitacion_id": habitacion_id.strip(),
                     "id_restaurante": id_restaurante.strip(),
                     }
+                    
                                             
                     print(message)
-                    #producer.send('info', value=message)
-                    sleep(1)
+                    producer.send('info', value=message)
+                    #sleep(1)
 
     except FileNotFoundError:
         print(f"File '{filename}' not found.")
