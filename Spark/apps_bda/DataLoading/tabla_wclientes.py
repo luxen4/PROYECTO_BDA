@@ -70,12 +70,12 @@ def dataframe_wcliente():
     .getOrCreate()
 
     try:
-        '''
+        
         bucket_name = 'my-local-bucket' 
         file_name = 'data_clientes'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_clientes.show()
-        '''
+        
         
         bucket_name = 'my-local-bucket' 
         file_name='data_reservas'
@@ -88,10 +88,10 @@ def dataframe_wcliente():
         
         
         bucket_name = 'my-local-bucket'
-        file_name = 'restaurantes.json' 
+        file_name = 'restaurantes_data.json' 
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_restaurantes.show()
-        df = df.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
+        df = df_reservas.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
         
         
         
@@ -119,7 +119,7 @@ def dataframe_wcliente():
         
         # No tocar que es OK
         for row in df.select("*").collect():
-            nombre_cliente=row["nombre"],
+            nombre_cliente=row["nombre_hotel"],
             fecha_llegada=row["fecha_llegada"]
             fecha_salida=row["fecha_salida"]
             tipo_habitacion=row["tipo_habitacion"]

@@ -115,7 +115,7 @@ def readCSV_Hoteles(filename):
             direccion_hotel = row[2]
             empleados = row[3]
             insertar_Hoteles(id_hotel, nombre_hotel, direccion_hotel, empleados)
-            
+            # Probar que lo meta con jdbc
     
 
 
@@ -132,7 +132,7 @@ def readCSV_Empleados(filename):
             posicion = row[2]
             fecha_contratacion = row[3]
             insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion)
- 
+            # Probar que lo meta con jdbc
  
  
 
@@ -144,3 +144,8 @@ readCSV_Hoteles(filename)
 createTable_empleados()
 filename="./../../data_bda/csv/empleados.csv"
 readCSV_Empleados(filename)
+
+
+
+
+

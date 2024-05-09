@@ -84,5 +84,5 @@ select2()
 
 
 
-# "¿Qué restaurante tiene el precio medio de menú más alto? \n" +
+# "¿Qué restaurante tiene el precio medio de menú más alto?
 # "¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")

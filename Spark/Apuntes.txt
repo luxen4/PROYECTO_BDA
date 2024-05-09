@@ -11,7 +11,7 @@
                                                                                                           
 # cd '.\Tema 4\'
 # cd .\Spark\
-# docker exec -it 518785959db72faf50cd5b2aca25643b864ab58dfdb5c123ab56fa97bc2271fa /bin/bash   # casa  
+# docker exec -it 39f9b5d69b610547150956962d27390a4c04fa994ba1a1144f5d80d025dc0db9 /bin/bash   # casa  
 # docker exec -it b17b7945d0d028dfc3b28a0892fb5ebbfd57e36d63ce2077ccf0b8f2e52dce65 /bin/bash   # clase
 # cd /opt/spark-apps     cd /opt/spark-data/sales
 # python prueba.py
@@ -286,3 +286,16 @@ git rm --cached 'Tema 4/Spark/cont_Neo4j/transactions/system/neostore.transactio
 
 # Problemas de espacio.
 wsl.exe --unregister docker-desktop-data
+
+
+
+
+
+
+
+
+
+
+
+
+

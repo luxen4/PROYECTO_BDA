@@ -88,7 +88,7 @@ def dataframe_wrestaurantes():
         df_reservas.show()
         
         bucket_name = 'my-local-bucket' 
-        file_name = 'restaurantes.json'
+        file_name = 'restaurantes_data.json'
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_restaurantes.show()
         

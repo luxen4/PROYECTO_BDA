@@ -41,7 +41,7 @@ def read_text_file(filename):
             
                     message = {
                     "id_reserva": id_reserva,
-                    "timestamp": str(int(datetime.now().timestamp() * 1000)).strip(),
+                    "timestamp": int(datetime.now().timestamp() * 1000),
                     "id_cliente": cliente_id.strip(),
                     "fecha_llegada": fecha_llegada.strip(),
                     "fecha_salida": fecha_salida.strip(),

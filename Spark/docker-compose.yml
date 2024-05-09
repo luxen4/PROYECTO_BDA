@@ -123,7 +123,8 @@ services:
 
 
   kafka:
-    image: wurstmeister/kafka:latest
+    # OKimage: wurstmeister/kafka:latest
+    image: confluentinc/cp-kafka:6.2.0
     hostname: kafka
     container_name: kafka
     ports:
@@ -141,7 +142,9 @@ services:
       - zookeeper
   
   zookeeper:
-    image: wurstmeister/zookeeper:latest
+    # OK image: wurstmeister/zookeeper:latest
+    #image: wurstmeister/zookeeper:3.6.3
+    image: zookeeper:3.6
     container_name: zookeeper
     ports:
       - "2181:2181"
