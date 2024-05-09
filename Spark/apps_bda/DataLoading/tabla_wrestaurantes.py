@@ -11,29 +11,44 @@ def createTable_wRestaurantes():
     
         cursor = connection.cursor()
         
+        '''
+        create_table_query = """
+            CREATE TABLE IF NOT EXISTS w_restaurantes (
+                id_registro SERIAL PRIMARY KEY,
+                
+                id_reserva VARCHAR (100),
+                
+                restaurante_id INTEGER,
+                restaurante_name VARCHAR (100),
+                
+                id_menu INTEGER,
+                menu_name VARCHAR (100),
+                menu_price DECIMAL(10,2),
+                
+                plato_id INTEGER,
+                plato_name VARCHAR (100)
+            );
+        """
+        '''
+        
         create_table_query = """
             CREATE TABLE IF NOT EXISTS w_restaurantes (
                 id_registro SERIAL PRIMARY KEY,
                 id_reserva VARCHAR (100),
+                
+                restaurante_id INTEGER,
                 restaurante_name VARCHAR (100),
+                
                 id_menu INTEGER,
-                menu_price DECIMAL(10,2)
+                menu_name VARCHAR (100),
+                menu_price DECIMAL(10,2),   
+                
+                plato_id INTEGER,
+                plato_name VARCHAR (100),
+                alergenos VARCHAR (100)
             );
         """
-        
-        
-        """ Hacer esto
-        id_registro SERIAL PRIMARY KEY,
-        id_reserva VARCHAR (100),
-        restaurante_name VARCHAR (100),
-        id_menu INTEGER,
-        _menu_name VARCHAR (100),   *Meter un nombre
-        plato_nombre VARCHAR (100)
-        alergenos VARCHAR (100)
-        menu_price DECIMAL(10,2)
-        """
-        
-        
+                                                                                   
         cursor.execute(create_table_query)
         connection.commit()
         
@@ -45,14 +60,14 @@ def createTable_wRestaurantes():
         print("An error occurred while creating the table:")
         print(e)  
 
-def insertarTable_wrestaurantes(id_reserva, restaurante_name, id_menu, menu_price):
+def insertarTable_wrestaurantes(id_registro, id_reserva, restaurante_id, restaurante_name, id_menu, menu_name, menu_price, plato_id, plato_name, alergenos):
     
     connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
     # connection = psycopg2.connect( host="my_postgres_service", port="9999", database="primord_db", user="PrimOrd", password="bdaPrimOrd")   
         
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO w_restaurantes (id_reserva, restaurante_name, id_menu, menu_price) VALUES ( %s, %s, %s, %s);", 
-                       (id_reserva, restaurante_name, id_menu, menu_price))
+    cursor.execute("INSERT INTO w_restaurantes (id_registro, id_reserva, restaurante_id, restaurante_name, id_menu, menu_name, menu_price, plato_id, plato_name, alergenos) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", 
+                       (id_registro, id_reserva, restaurante_id, restaurante_name, id_menu, menu_name, menu_price, plato_id, plato_name, alergenos))
     
     connection.commit() 
     cursor.close()
@@ -85,33 +100,50 @@ def dataframe_wrestaurantes():
         bucket_name = 'my-local-bucket'
         file_name = 'data_reservas' 
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_reservas.show()
+        #df_reservas.show()
         
         bucket_name = 'my-local-bucket' 
         file_name = 'restaurantes_data.json'
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
-        df_restaurantes.show()
+        #df_restaurantes.show()
         
         df = df_reservas.join(df_restaurantes.select("id_restaurante","nombre"), "id_restaurante", "left")
         df = df.withColumnRenamed("nombre", "restaurante_name")   # Cambiar el nombre de la columna
-        df.show()
+        #df.show()
         
         bucket_name = 'my-local-bucket' 
         file_name='data_menus'      
         df_menus = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_menus.show()
-        
+        #df_menus.show()
         
         df = df.join(df_menus.select("id_restaurante","id_menu","precio"), "id_restaurante", "left") #### METER UN NOMBRE DE MENU
-        df.show()
+        #df.show()
         
-        '''
+       
         bucket_name = 'my-local-bucket'
-        file_name = 'platos'
-        df_platos= spark.read.json(f"s3a://{bucket_name}/{file_name}") 
-        #df_restaurantes.show()
-        df = df.join(df_platos.select("id_restaurante","id_hotel"), "id_restaurante", "left")
-        '''
+        file_name = 'data_relaciones'
+        df_relaciones= spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True) 
+        #df_relaciones.show()
+        df = df.join(df_relaciones.select("id_menu","id_plato"), "id_menu", "left")
+        #df.show()
+        
+        
+        
+        bucket_name = 'my-local-bucket' 
+        file_name='data_platos'      
+        df_platos = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        df_platos.show()
+        
+        df_platos = df_platos.withColumnRenamed("platoID", "plato_id")   # Cambiar el nombre de la columna
+        
+        df = df.join(df_platos.select("plato_id","nombre","ingredientes","alergenos"), "plato_id", "left") #### METER UN NOMBRE DE MENU
+        df.show()
+     
+# https://stackoverflow.com/questions/65114334/pyspark-join-with-different-column-names-and-cant-be-hard-coded-before-runti      
+# left_key = 'leftColname'
+# right_key = 'rightColname'
+# final = ta.join(tb, ta[left_key] == tb[right_key], how='left')
+
         
       
         # Eliminar columnas"
@@ -120,10 +152,9 @@ def dataframe_wrestaurantes():
         df = df[[col for col in df.columns if col != "fecha_salida"]]
         df = df[[col for col in df.columns if col != "tipo_habitacion"]]
         df = df[[col for col in df.columns if col != "preferencias_comida"]]
-        df = df[[col for col in df.columns if col != "id_restaurante"]]
         df = df[[col for col in df.columns if col != "id_cliente"]]
         # Mostrar el DataFrame resultante
-        df.show()
+        #df.show()
         
         # df = df.dropDuplicates()    # Eliminar registros duplicados
 
@@ -132,10 +163,15 @@ def dataframe_wrestaurantes():
         # No tocar que es OK
         for row in df.select("*").collect():
             print(row)
-            id_reserva=row["id_reserva"]
-            restaurante_name=row["restaurante_name"],
+            id_reserva=row["id_reserva"],
+            restaurante_id = row["restaurante_id"]
+            restaurante_name=row["restaurante_name"]
             id_menu=row["id_menu"]
+            menu_name=row["menu_name"]
             menu_price=row["precio"]
+            plato_id = row["menu_price"]
+            plato_name = row["plato_name"]
+            alergenos = row["alergenos"]
             
             print(f"""
                   id_reserva-Cliente: {id_reserva}, 
@@ -144,7 +180,7 @@ def dataframe_wrestaurantes():
                   menu_price: {menu_price}
                   """)
             
-            insertarTable_wrestaurantes( id_reserva, restaurante_name, id_menu, menu_price)
+            insertarTable_wrestaurantes( id_reserva, restaurante_id, restaurante_name, id_menu, menu_name, menu_price, plato_id, plato_name, alergenos)
            
         spark.stop()
     
@@ -156,20 +192,16 @@ def dataframe_wrestaurantes():
 
 
 
+###
+# createTable_wRestaurantes()
+dataframe_wrestaurantes()
+###
 
 
 
 
 
-
-
-
-
-
-
-      
-
-
+'''
 # Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
 def createTable_wReservas():
     try:
@@ -224,16 +256,7 @@ def createTable_wHoteles():
     except Exception as e:
         print("An error occurred while creating the table:")
         print(e)  
-
-
-
-###
-createTable_wRestaurantes()
-dataframe_wrestaurantes()
-#    createTable_wRestaurantes()
-#    createTable_wReservas()
-#    createTable_wHoteles()
-###
+'''
 
 
 
@@ -243,30 +266,5 @@ dataframe_wrestaurantes()
 5.2.2 Análisis del rendimiento del restaurante:
 ¿Qué restaurante tiene el menu_price medio de menú más alto?
 ¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?
-5.2.3 Patrones de reserva
-¿Cuál es la duración media de la estancia de los clientes de un hotel?
-¿Existen periodos de máxima ocupación en función de las fechas de reserva?
-5.2.4 Gestión de empleados
-¿Cuántos empleados tiene de media cada hotel?
-5.2.5 Ocupación e ingresos del hotel
-¿Cuál es el índice de ocupación de cada hotel y varía según la categoría de
-habitación?
-¿Podemos estimar los ingresos generados por cada hotel basándonos en los
-menu_prices de las habitaciones y los índices de ocupación?
-5.2.6 Análisis de menús
-¿Qué platos son los más y los menos populares entre los restaurantes?
-23/24 - IABD - Big Data Aplicado
-¿Hay ingredientes o alérgenos comunes que aparezcan con frecuencia en los
-platos?
-5.2.7 Comportamiento de los clientes
-¿Existen pautas en las preferencias de los clientes en función de la época del año?
-¿Los clientes con preferencias dietéticas específicas tienden a reservar en
-restaurantes concretos?
-5.2.8 Garantía de calidad
-¿Existen discrepancias entre la disponibilidad de platos comunicada y las reservas
-reales realizadas?
-5.2.9 Análisis de mercado
-¿Cómo se comparan los menu_prices de las habitaciones de los distintos hoteles y
-existen valores atípicos?'''
-
+'''
 

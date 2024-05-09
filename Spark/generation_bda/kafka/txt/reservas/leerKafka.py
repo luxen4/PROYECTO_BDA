@@ -36,3 +36,6 @@ def leerConSpark():
         print(e)
 
 leerConSpark()
+
+# Que los guarde en local probar
+# resultado.write.csv("s3a://my-local-bucket/empleados1.csv", header=True, mode="overwrite")

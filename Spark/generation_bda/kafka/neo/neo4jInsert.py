@@ -28,9 +28,9 @@ class Neo4jClient:
         return result.single()[0]
   
     
-    def create_relacion(self, session, id_menu, id_restaurante):
-        result = session.run("CREATE (r:Relaciones {id_menu: $id_menu, id_restaurante: $id_restaurante}) RETURN r", 
-                            id_menu=id_menu, id_restaurante=id_restaurante)
+    def create_relacion(self, session, id_menu, id_plato):
+        result = session.run("CREATE (r:Relaciones {id_menu: $id_menu, id_plato: $id_plato}) RETURN r", 
+                            id_menu=id_menu, id_plato=id_plato)
 
         return result.single()[0]
     
@@ -121,10 +121,10 @@ relaciones = read_json_fileRelaciones(filename)
 with neo4j_client._driver.session() as session:
     for relacion in relaciones:
         id_menu = relacion['id_menu']
-        id_restaurante = relacion['id_restaurante']
+        id_restaurante = relacion['id_plato']
         
         relac = neo4j_client.create_relacion(session,  id_menu, id_restaurante)
         
-        print(f"Relación creada -> id_menu: {relacion['id_menu']}, id_restaurante: {relacion['id_restaurante']}")
+        print(f"Relación creada -> id_menu: {relacion['id_menu']}, id_plato: {relacion['id_plato']}")
 neo4j_client.close()
 #___ 

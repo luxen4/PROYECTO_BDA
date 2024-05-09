@@ -1,6 +1,13 @@
 from pyspark.sql import SparkSession
 
-def select():
+
+
+
+
+
+
+
+def select1():
 
     spark = SparkSession.builder \
     .appName("Leer y procesar con Spark") \
@@ -37,11 +44,6 @@ def select():
     df_resultado.show()
     spark.stop()
     
-select()
-
-
-
-
 
 def select2():
 
@@ -69,10 +71,9 @@ def select2():
     df.createOrReplaceTempView("tabla_spark")
 
     # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
-    df_resultado = spark.sql("""SELECT nombre, count(nombre)
-                                FROM tabla_spark
-                                GROUP BY nombre
-                                ORDER BY count(nombre)
+    df_resultado = spark.sql("""SELECT plato_nombre, count(plato_nombre) as cantidad FROM tabla_spark
+                                GROUP BY plato_nombre
+                                ORDER BY cantidad
                                 LIMIT 5;
                              """)
 
@@ -80,9 +81,11 @@ def select2():
     df_resultado.show()
     spark.stop()
     
+    
+    
+    
+print("¿Qué restaurante tiene el precio medio de menú más alto?")
+select1()
+
+print("¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")
 select2()
-
-
-
-# "¿Qué restaurante tiene el precio medio de menú más alto?
-# "¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")
