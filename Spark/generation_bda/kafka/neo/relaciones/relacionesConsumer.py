@@ -45,7 +45,7 @@ query = df \
     .writeStream \
     .outputMode("append") \
     .format("csv") \
-    .option("path", "s3a://my-local-bucket/data_relaciones") \
+    .option("path", "s3a://my-local-bucket/relaciones_csv") \
     .option("checkpointLocation", "s3a://my-local-bucket/relaciones")\
     .option("header", "true")\
     .option("multiline", "true")\

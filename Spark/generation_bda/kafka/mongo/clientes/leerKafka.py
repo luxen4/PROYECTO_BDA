@@ -22,12 +22,17 @@ def leerConSpark():
         #df = spark.read.text("s3a://my-local-bucket/stores_data_procesado.csv/")
         #d f = spark.read.text("s3a://my-local-bucket/data_reservas")
         
+        # csv
         bucket_name = 'my-local-bucket' 
-        folder_name='data_menus'
-        df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
-        #df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
+        folder_name='habitaciones_csv'
+        #df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
         
+        #json
+        bucket_name = 'my-local-bucket' 
+        folder_name='clientes_json3'
+        df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
         
+
         df.show()
         spark.stop()
     
@@ -37,5 +42,7 @@ def leerConSpark():
 
 leerConSpark()
 
-# Que los guarde en local probar
-# resultado.write.csv("s3a://my-local-bucket/empleados1.csv", header=True, mode="overwrite")
+
+# Que los guarde en local, hace 4 archivos 
+# df.write.csv("./habitaciones", header=True, mode="overwrite")
+# df.write.json("./restaurantes", mode="overwrite")

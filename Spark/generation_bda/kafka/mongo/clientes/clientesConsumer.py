@@ -45,10 +45,11 @@ query = df \
     .writeStream \
     .outputMode("append") \
     .format("json") \
-    .option("path", "s3a://my-local-bucket/data_clientes") \
-    .option("checkpointLocation", "s3a://my-local-bucket/clientes")\
-    .option("multiline", "true")\
+    .option("path", "s3a://my-local-bucket/clientes_json3") \
+    .option("checkpointLocation", "s3a://my-local-bucket/clientes3")\
+    .option("multiline",'true')\
     .start()
+    
 
 '''
 query = df \
@@ -61,48 +62,6 @@ df.printSchema()
 
 # Wait for the termination of the querypython 
 query.awaitTermination()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -56,11 +56,11 @@ def dataframe_wcliente():
 
     try:
         
-        file_name = 'data_clientes'
+        file_name = 'clientes_json'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_clientes.show()
         
-        file_name='data_reservas'
+        file_name='reservas_csv'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df = df_clientes.join(df_reservas.select("id_cliente","id_restaurante","fecha_llegada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
         #df.show()
@@ -72,7 +72,7 @@ def dataframe_wcliente():
         df = df_reservas.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
         
         
-        file_name = 'data_hoteles.json' 
+        file_name = 'hoteles_json' 
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_hoteles.show()
         df = df.join(df_hoteles.select("id_hotel","nombre_hotel"), "id_hotel", "left")

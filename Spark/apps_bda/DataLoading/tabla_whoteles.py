@@ -16,6 +16,8 @@ def createTable_wHoteles():
                 id_hotel INTEGER,
                 hotel_name VARCHAR (100),
                 
+                id_reserva INTEGER,
+                
                 fecha_llegada Date,
                 fecha_salida Date,
                 
@@ -60,22 +62,31 @@ def dataframe_wrestaurantes():
     bucket_name = 'my-local-bucket' 
 
     try:
-        file_name = 'data_hoteles.json'
+        
+        file_name = 'hoteles_json'
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_hoteles.show()
         
         
-        file_name = 'habitaciones.csv' 
+        
+        file_name = 'reservas_data.csv' 
+        df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        df_reservas.show()
+        
+        
+        
+        file_name = 'habitaciones_data.csv' 
         df_habitaciones = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df_habitaciones.show()
         
         
         df = df_hoteles.join(df_habitaciones.select("id_restaurante","nombre"), "id_restaurante", "left")
+        
         df = df.withColumnRenamed("nombre", "restaurante_name")   # Cambiar el nombre de la columna
         df.show()
         
 
-        file_name='data_menus'      
+        file_name='menus_csv'      
         df_menus = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df_menus.show()
         

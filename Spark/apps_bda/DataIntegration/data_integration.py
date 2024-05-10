@@ -1,5 +1,41 @@
-from pyspark.sql import SparkSession
+import sys
+sys.path.append("..")
+import sessions
 
+if __name__ == "__main__":
+    try:
+        spark = sessions.sesionSpark()
+        
+        # csv
+        df = spark.read.csv("./../../spark-data/csv/habitaciones.csv")
+        ruta_salida = "s3a://my-local-bucket/habitaciones_csv"
+        df=df.write.csv(ruta_salida, mode="overwrite")
+        
+        # json
+        df = spark.read.option("multiline", "true").json("./../../spark-data/json/restaurantes.json")
+        ruta_salida = "s3a://my-local-bucket/restaurantes_json"
+        df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")
+        
+        spark.stop()
+
+    except Exception as e:
+        print("error reading TXT")
+        print(e)
+# Función -> Sube directamente los archivos al bucket
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 # Crear la sesión de Spark
 def sesionSpark():
     spark = SparkSession.builder \
@@ -18,26 +54,4 @@ def sesionSpark():
     .getOrCreate()
     
     return spark
-
-# Meter directamente los archivos a S3
-try:
-    spark=sesionSpark()
-    
-    # csv
-    df = spark.read.csv("./../../spark-data/csv/habitaciones.csv")
-    ruta_salida = "s3a://my-local-bucket/habitaciones_data.csv"
-    df=df.write.csv(ruta_salida, mode="overwrite")
-    
-    # json
-    df = spark.read.option("multiline", "true").json("./../../spark-data/json/restaurantes.json")
-    ruta_salida = "s3a://my-local-bucket/restaurantes_data.json"
-    df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")
-    
-    spark.stop()
-
-except Exception as e:
-    print("error reading TXT")
-    print(e)
-    
-    
-# Función -> Sube directamente los archivos al bucket
+'''

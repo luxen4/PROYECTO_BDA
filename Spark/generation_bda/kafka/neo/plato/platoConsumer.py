@@ -47,8 +47,8 @@ query = df \
     .writeStream \
     .outputMode("append") \
     .format("csv") \
-    .option("path", "s3a://my-local-bucket/data_platos") \
-    .option("checkpointLocation", "s3a://my-local-bucket/platos")\
+    .option("path", "s3a://my-local-bucket/plato_csv") \
+    .option("checkpointLocation", "s3a://my-local-bucket/plato")\
     .option("header", "true")\
     .option("multiline", "true")\
     .start()

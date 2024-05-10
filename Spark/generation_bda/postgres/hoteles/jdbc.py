@@ -36,7 +36,7 @@ def leerPostgres():
     resultado = spark.sql("SELECT * FROM tabla_spark;")
     resultado.show()
     
-    
+    '''
     resultado \
     .write \
     .option('header', 'true') \
@@ -44,7 +44,19 @@ def leerPostgres():
     .option('fs.s3a.committer.staging.conflict-mode', 'replace') \
     .option("fs.s3a.fast.upload.buffer", "bytebuffer")\
     .mode('overwrite') \
-    .csv(path='s3a://my-local-bucket/data_hoteles.csv', sep=',')
+    .csv(path='s3a://my-local-bucket/hoteles_csv', sep=',')'''
+    
+    
+    
+    resultado \
+    .write \
+    .option('fs.s3a.committer.name', 'partitioned') \
+    .option('fs.s3a.committer.staging.conflict-mode', 'replace') \
+    .option("fs.s3a.fast.upload.buffer", "bytebuffer") \
+    .mode('overwrite') \
+    .json(path='s3a://my-local-bucket/hoteles_json')
+    
+    
 
 
     spark.stop()

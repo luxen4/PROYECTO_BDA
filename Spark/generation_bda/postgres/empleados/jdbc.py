@@ -44,7 +44,7 @@ def leerPostgres():
     .option('fs.s3a.committer.staging.conflict-mode', 'replace') \
     .option("fs.s3a.fast.upload.buffer", "bytebuffer")\
     .mode('overwrite') \
-    .csv(path='s3a://my-local-bucket/data_empleados.csv', sep=',')
+    .csv(path='s3a://my-local-bucket/empleados_csv', sep=',')
 
 
     spark.stop()

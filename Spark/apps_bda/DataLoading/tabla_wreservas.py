@@ -75,12 +75,12 @@ def dataframe_wreservas():
 
     try:
     
-        file_name = 'data_reservas' 
+        file_name = 'reservas_csv' 
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         #df_reservas.show()
         
         
-        file_name='restaurantes.json'      
+        file_name='restaurantes_data.json'      
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         #df_restaurantes.show()
         
@@ -90,7 +90,7 @@ def dataframe_wreservas():
         #df.show()
         
 
-        file_name = 'data_hoteles.json'
+        file_name = 'hoteles_json'
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         #df_hoteles.show()
         
@@ -99,7 +99,7 @@ def dataframe_wreservas():
         df.show()
         
     
-        file_name = 'data_habitaciones.csv' 
+        file_name = 'habitaciones_data.csv' 
         df_habitaciones = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         #df_habitaciones.show()
         
@@ -108,11 +108,6 @@ def dataframe_wreservas():
         
         
         #CLIENTES
-        
-        
-        
-        
-        
         
       
         # Eliminar columnas"
