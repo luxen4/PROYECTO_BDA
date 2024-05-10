@@ -24,11 +24,7 @@ select()
 
 selectZZZZZZ  ()
 
-# "¿Existen pautas en las preferencias de los clientes en función de la época del año?
-#- Será hoteles preferidos en épocas por mes/o año
-        
-
-5.2.7 Comportamiento de los clientes
-¿Existen pautas en las preferencias de los clientes en función de la época del año?
-¿Los clientes con preferencias dietéticas específicas tienden a reservar en
-restaurantes concretos?
+'''
+5.2.8 Garantía de calidad
+¿Existen discrepancias entre la disponibilidad de platos comunicada y las reservas
+reales realizadas?'''

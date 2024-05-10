@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json
-from pyspark.sql.types import StructType, StringType,LongType
+from pyspark.sql.types import StructType, StringType, LongType
 
 spark = SparkSession.builder \
 .appName("Leer y procesar con Spark") \
@@ -16,10 +16,7 @@ spark = SparkSession.builder \
 .config("spark.executor.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
 .master("spark://spark-master:7077") \
 .getOrCreate()
-
-
-  
-# Rafa  
+    
 df =spark  \
   .readStream \
   .format("kafka") \
@@ -27,28 +24,36 @@ df =spark  \
   .option("subscribe", "info") \
   .option("failOnDataLoss",'false') \
   .load()
-  
+
+
 schema = StructType() \
-    .add("id_cliente", StringType()) \
+    .add("platoID", StringType()) \
     .add("nombre", StringType()) \
-    .add("direccion", StringType()) \
-    .add("preferencias_alimenticias", StringType())
+    .add("ingredientes", StringType()) \
+    .add("alergenos", StringType())
      
 
 # Convert value column to JSON and apply schema
 df = df.selectExpr("CAST(value AS STRING)") \
     .select(from_json("value", schema).alias("data")) \
     .select("data.*")
+    
 
+
+# Print schema of DataFrame for debugging
+df.printSchema()
 
 query = df \
     .writeStream \
     .outputMode("append") \
     .format("json") \
-    .option("path", "s3a://my-local-bucket/data_clientes") \
-    .option("checkpointLocation", "s3a://my-local-bucket/clientes")\
+    .option("path", "s3a://my-local-bucket/data_platos2") \
+    .option("checkpointLocation", "s3a://my-local-bucket/platos2")\
     .option("multiline", "true")\
     .start()
+
+
+# Este que lo haga json, por variar un poco
 
 '''
 query = df \
@@ -57,81 +62,7 @@ query = df \
     .format("console") \
     .start()
 '''
-df.printSchema()
+ 
 
 # Wait for the termination of the querypython 
 query.awaitTermination()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-''' Para local
-query = df \
-    .writeStream \
-    .format("json") \
-    .option("failOnDataLoss",'false') \
-    .option("path", "./datoss") \
-    .option("checkpointLocation", "./checkopoint") \
-    .start()'''
-
-'''
-query = df \
-    .writeStream \
-    .format("csv") \
-    .option("failOnDataLoss",'false') \
-    .option("path", "s3a://my-local-bucket/data_reservas.csv") \
-    .option("checkpointLocation", "checkpoint_dir") \
-    .start()'''
-    
-'''
-query = df.writeStream \
-      .format("csv") \
-      .option("sep", ",") \
-      .option("header", "true") \
-      .option("path", "./pruebas") \
-      .option("checkpointLocation", "./checkpoint_dir") \
-      .start()
-'''    

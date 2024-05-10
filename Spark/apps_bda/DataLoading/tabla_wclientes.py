@@ -1,10 +1,8 @@
 import psycopg2
-from pyspark.sql import SparkSession
-# Crear una tablas para responder a las preguntas de ANALISIS
+import sessions
+
 
 def createTable_WClientes():
-    #5.2.1 Análisis de las preferencias de los clientes
-    #¿Cuáles son las preferencias alimenticias más comunes entre los clientes?
 
     try:
         #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
@@ -53,51 +51,28 @@ def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, prefere
      
 def dataframe_wcliente():
     
-    spark = SparkSession.builder \
-    .appName("Leer y procesar con Spark") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://spark-localstack-1:4566") \
-    .config("spark.hadoop.fs.s3a.access.key", 'test') \
-    .config("spark.hadoop.fs.s3a.secret.key", 'test') \
-    .config("spark.sql.shuffle.partitions", "4") \
-    .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.3.1") \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.driver.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-    .config("spark.executor.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-    .config("spark.jars","./postgresql-42.7.3.jar") \
-    .config("spark.driver.extraClassPath", "/opt/spark-apps/postgresql-42.7.3.jar") \
-    .master("local[*]") \
-    .getOrCreate()
+    spark = sessions.sesionSpark()
+    bucket_name = 'my-local-bucket' 
 
     try:
         
-        bucket_name = 'my-local-bucket' 
         file_name = 'data_clientes'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_clientes.show()
         
-        
-        bucket_name = 'my-local-bucket' 
         file_name='data_reservas'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_reservas.show()
-        
-        
-        #df = df_clientes.join(df_reservas.select("id_cliente","id_restaurante","fecha_llegada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
+        df = df_clientes.join(df_reservas.select("id_cliente","id_restaurante","fecha_llegada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
         #df.show()
         
         
-        bucket_name = 'my-local-bucket'
         file_name = 'restaurantes_data.json' 
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_restaurantes.show()
         df = df_reservas.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
         
         
-        
-        bucket_name = 'my-local-bucket'
-        file_name = 'data_hoteles.json' # este es directo al S3
-        #df_hoteles = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        file_name = 'data_hoteles.json' 
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_hoteles.show()
         df = df.join(df_hoteles.select("id_hotel","nombre_hotel"), "id_hotel", "left")
@@ -115,9 +90,6 @@ def dataframe_wcliente():
         
         # df = df.dropDuplicates()    # Eliminar registros duplicados
 
-       
-        
-        # No tocar que es OK
         for row in df.select("*").collect():
             nombre_cliente=row["nombre_hotel"],
             fecha_llegada=row["fecha_llegada"]

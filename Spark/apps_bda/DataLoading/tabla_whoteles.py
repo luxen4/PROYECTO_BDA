@@ -1,9 +1,7 @@
 import psycopg2
-from pyspark.sql import SparkSession
-# Crear una tablas para responder a las preguntas de ANALISIS
+import sessions
 
-    
-# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
+
 def createTable_wHoteles():
     try:
         #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
@@ -13,12 +11,20 @@ def createTable_wHoteles():
         
         create_table_query = """
             CREATE TABLE IF NOT EXISTS w_hoteles (
-                id_hotel SERIAL PRIMARY KEY,
+                id_registro SERIAL PRIMARY KEY,
+                
+                id_hotel INTEGER,
+                hotel_name VARCHAR (100),
+                
+                fecha_llegada Date,
+                fecha_salida Date,
+                
                 empleados VARCHAR (100),
                 categoria_habitacion (100),
                 price_habitacion DECIMAL(10,2)
             );
         """
+        
         cursor.execute(create_table_query)
         connection.commit()
         
@@ -50,42 +56,25 @@ def insertarTable_whoteles(id_hotel, empleados, categoria_habitacion, price_habi
      
 def dataframe_wrestaurantes():
     
-    spark = SparkSession.builder \
-    .appName("Leer y procesar con Spark") \
-    .config("spark.hadoop.fs.s3a.endpoint", "http://spark-localstack-1:4566") \
-    .config("spark.hadoop.fs.s3a.access.key", 'test') \
-    .config("spark.hadoop.fs.s3a.secret.key", 'test') \
-    .config("spark.sql.shuffle.partitions", "4") \
-    .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.3.1") \
-    .config("spark.hadoop.fs.s3a.path.style.access", "true") \
-    .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-    .config("spark.driver.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-    .config("spark.executor.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-    .config("spark.jars","./postgresql-42.7.3.jar") \
-    .config("spark.driver.extraClassPath", "/opt/spark-apps/postgresql-42.7.3.jar") \
-    .master("local[*]") \
-    .getOrCreate()
+    spark = sessions.sesionSpark()
+    bucket_name = 'my-local-bucket' 
 
     try:
-        # Hoteles, reservas, habitaciones, empleados
-        bucket_name = 'my-local-bucket' 
         file_name = 'data_hoteles.json'
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_hoteles.show()
         
         
-        bucket_name = 'my-local-bucket'
         file_name = 'habitaciones.csv' 
         df_habitaciones = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df_habitaciones.show()
-        
         
         
         df = df_hoteles.join(df_habitaciones.select("id_restaurante","nombre"), "id_restaurante", "left")
         df = df.withColumnRenamed("nombre", "restaurante_name")   # Cambiar el nombre de la columna
         df.show()
         
-        bucket_name = 'my-local-bucket' 
+
         file_name='data_menus'      
         df_menus = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df_menus.show()
@@ -95,7 +84,6 @@ def dataframe_wrestaurantes():
         df.show()
         
         '''
-        bucket_name = 'my-local-bucket'
         file_name = 'platos'
         df_platos= spark.read.json(f"s3a://{bucket_name}/{file_name}") 
         #df_restaurantes.show()
@@ -116,9 +104,6 @@ def dataframe_wrestaurantes():
         
         # df = df.dropDuplicates()    # Eliminar registros duplicados
 
-       
-        
-        # No tocar que es OK
         for row in df.select("*").collect():
             print(row)
             id_reserva=row["id_reserva"]
@@ -134,11 +119,7 @@ def dataframe_wrestaurantes():
                   """)
             
             insertarTable_whoteles( id_hotel, empleados, categoria_habitacion, price_habitacion)
-            
-            
-            
 
-            
            
         spark.stop()
     
@@ -147,14 +128,9 @@ def dataframe_wrestaurantes():
         print(e)
 
 
-
-
 ###
 createTable_wHoteles()
 dataframe_wrestaurantes()
-#    createTable_wRestaurantes()
-#    createTable_wReservas()
-#    createTable_wHoteles()
 ###
 
 
@@ -193,89 +169,3 @@ existen valores atípicos?'''
 
 
 
-
-'''
-# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
-def createTable_wRestaurantes():
-    try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
-        cursor = connection.cursor()
-        
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS w_restaurantes (
-                id_restaurante SERIAL PRIMARY KEY,
-                precio_menu DECIMAL(10,2),
-                nombre_plato VARCHAR (100),
-                alergenos VARCHAR (100)
-            );
-        """
-        cursor.execute(create_table_query)
-        connection.commit()
-        
-        cursor.close()
-        connection.close()
-        
-        print("Table 'W_RESTAURANTES' created successfully.")
-    except Exception as e:
-        print("An error occurred while creating the table:")
-        print(e)  
-
-
-
-# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
-def createTable_wReservas():
-    try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
-        cursor = connection.cursor()
-        
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS w_reservas (
-                id_reserva SERIAL PRIMARY KEY,
-                fecha_entrada DATE,
-                fecha_salida DATE,
-                nombre_hotel VARCHAR (100)
-            );
-        """
-        cursor.execute(create_table_query)
-        connection.commit()
-        
-        cursor.close()
-        connection.close()
-        
-        print("Table 'w_reservas' created successfully.")
-    except Exception as e:
-        print("An error occurred while creating the table:")
-        print(e)  
-
-
-# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
-def createTable_wHoteles():
-    try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
-        cursor = connection.cursor()
-        
-        create_table_query = """
-            CREATE TABLE IF NOT EXISTS w_reservas (
-                id_hotel SERIAL PRIMARY KEY,
-                empleados VARCHAR (100),
-                categoria_habitacion (100),
-                precio_habitacion DECIMAL(10,2)
-            );
-        """
-        cursor.execute(create_table_query)
-        connection.commit()
-        
-        cursor.close()
-        connection.close()
-        
-        print("Table 'w_reservas' created successfully.")
-    except Exception as e:
-        print("An error occurred while creating the table:")
-        print(e)  
-'''

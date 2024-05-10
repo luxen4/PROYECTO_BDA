@@ -3,6 +3,18 @@
 
 
 
+### Entrar al locastack ##
+# docker exec -it e43135d670717111f3876b400495c8127c9f834b63a5bfbe4379487585f5d07f /bin/bash    # casa
+# docker exec -it a89c5d53234a8fac20dc932e1f4e53e48c2eb407d4f78825e711978143a4a0b1 /bin/bash    # clase
+
+    # Crear un bucket por comando    ---> awslocal s3api create-bucket --bucket my-local-bucket
+    # Listar los archivos del bucket ---> awslocal s3 ls s3://my-local-bucket
+                                          ??? aws s3 ls s3://my-local-bucket/
+
+# Ver el contenido de un bucket         ---> awslocal s3api list-objects --bucket my-local-bucket
+# Eliminar un archivo de un bucket      ---> aws s3 rm s3://my-local-bucket/sales_data1.csv
+# Listar los buckets                    ---> awslocal s3api list-buckets
+# Eliminar el bucket                    ---> awslocal s3 rb s3://my-local-bucket --force
 
 
 ###############
@@ -13,12 +25,7 @@
 # cd .\Spark\
 # docker exec -it 39f9b5d69b610547150956962d27390a4c04fa994ba1a1144f5d80d025dc0db9 /bin/bash   # casa  
 # docker exec -it b17b7945d0d028dfc3b28a0892fb5ebbfd57e36d63ce2077ccf0b8f2e52dce65 /bin/bash   # clase
-# cd /opt/spark-apps     cd /opt/spark-data/sales
-# python prueba.py
-
-
-
-
+# cd /opt/spark-apps     cd /opt/spark-data
 
 
 #################
@@ -33,6 +40,7 @@
     # \q o \quit
     # DROP TABLE IF EXISTS stores;
 
+#################
 Pendiente:
 psql -h localhost -p 9999 -U primOrd -d PrimOrd
 CREATE DATABASE PrimOrd;
@@ -42,22 +50,21 @@ Puerto BBDD: 9999
 ● Nombre usuario: primOrd
 ● Password usuario: bdaPrimOrd
 
-
-
 #Crear una base de datos:
     psql -h localhost -p 9999 -U primOrd -d PrimOrd -W    # para la contraseña
+#################
 
 
 
 
-
-######
+############
 Librerías
-######
+############
 # pip3 install kafka-python==2.0.2
 # python3 -m pip install numpy
 # python3 -m pip install pandas>=1.0.5
 # pip3 install sqlalchemy
+
 
 # Por pasos...dentro del contenedor spark
 # https://stackoverflow.com/questions/40809221/no-module-named-psycopg2
@@ -68,20 +75,6 @@ Librerías
 Para el contenedor de spark
 # pip3 install --upgrade pandas==1.0.5
 # pip3 install s3fs
-
-
-### Entrar al locastack ##
-
-# docker exec -it e43135d670717111f3876b400495c8127c9f834b63a5bfbe4379487585f5d07f /bin/bash    # casa
-# docker exec -it a89c5d53234a8fac20dc932e1f4e53e48c2eb407d4f78825e711978143a4a0b1 /bin/bash    # clase
-
-    # Crear un bucket por comando    ---> awslocal s3api create-bucket --bucket my-local-bucket
-    # Listar los archivos del bucket ---> awslocal s3 ls s3://my-local-bucket
-
-# Ver el contenido de un bucket         ---> awslocal s3api list-objects --bucket my-local-bucket
-# Eliminar un archivo de un bucket      ---> aws s3 rm s3://my-local-bucket/sales_data1.csv
-# Listar los buckets                    ---> awslocal s3api list-buckets
-# Eliminar el bucket                    ---> awslocal s3 rb s3://my-local-bucket --force
 
 
 
@@ -95,9 +88,6 @@ Default output format [json]: json
 # Listar lo que hay debajo de la carpeta prueba
 awslocal s3 ls s3://my-local-bucket/prueba/
 
-
-
-aws s3 ls s3://my-local-bucket/
 
 
 # Configurar credenciales  ---> aws configure
@@ -132,8 +122,6 @@ Successfully copied 82.4kB to 90311ea633f9c9432dcdb4f63e39c8831bdbb4a130f4aa9394
 
 Para guia de locastack
 https://docs.localstack.cloud/user-guide/aws/s3/
-
-
 
 
 - Conectar mysql con spark.
