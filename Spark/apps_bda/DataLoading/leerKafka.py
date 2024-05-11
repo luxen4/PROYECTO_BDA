@@ -24,13 +24,13 @@ def leerConSpark():
         
         # csv
         bucket_name = 'my-local-bucket' 
-        folder_name='habitaciones_csv'
-        #df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
+        folder_name='reservas_csv'
+        df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
         
         #json
         bucket_name = 'my-local-bucket' 
-        folder_name='clientes_json3'
-        df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
+        folder_name='hoteles_json'
+        #df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
         
 
         df.show()

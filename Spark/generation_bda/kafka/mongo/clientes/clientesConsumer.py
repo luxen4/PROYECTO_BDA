@@ -45,8 +45,8 @@ query = df \
     .writeStream \
     .outputMode("append") \
     .format("json") \
-    .option("path", "s3a://my-local-bucket/clientes_json3") \
-    .option("checkpointLocation", "s3a://my-local-bucket/clientes3")\
+    .option("path", "s3a://my-local-bucket/clientes_json") \
+    .option("checkpointLocation", "s3a://my-local-bucket/clientes")\
     .option("multiline",'true')\
     .start()
     

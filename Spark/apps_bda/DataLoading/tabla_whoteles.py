@@ -1,11 +1,32 @@
 import psycopg2
 import sessions
 
+def dropTable_wHoteles():
+    try:
+        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+    
+        cursor = connection.cursor()
+        create_table_query = """ DROP TABLE IF EXISTS w_hoteles;"""
+        
+        cursor.execute(create_table_query)
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'w_hoteles' DELETED successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)  
+
+
+
 
 def createTable_wHoteles():
     try:
         #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
     
         cursor = connection.cursor()
         
@@ -13,16 +34,16 @@ def createTable_wHoteles():
             CREATE TABLE IF NOT EXISTS w_hoteles (
                 id_registro SERIAL PRIMARY KEY,
                 
-                id_hotel INTEGER,
+                hotel_id INTEGER,
                 hotel_name VARCHAR (100),
                 
-                id_reserva INTEGER,
+                reserva_id VARCHAR (100),
                 
                 fecha_llegada Date,
                 fecha_salida Date,
                 
                 empleados VARCHAR (100),
-                categoria_habitacion (100),
+                categoria_habitacion VARCHAR (100),
                 price_habitacion DECIMAL(10,2)
             );
         """
@@ -39,14 +60,14 @@ def createTable_wHoteles():
         print(e)    
 
 
-def insertarTable_whoteles(id_hotel, empleados, categoria_habitacion, price_habitacion):
+def insertarTable_whoteles(hotel_id, hotel_name, reserva_id, fecha_llegada, fecha_salida, empleados, categoria_habitacion, price_habitacion):
     
     connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
     # connection = psycopg2.connect( host="my_postgres_service", port="9999", database="primord_db", user="PrimOrd", password="bdaPrimOrd")   
         
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO w_hoteles (id_hotel, empleados, categoria_habitacion, price_habitacion) VALUES ( %s, %s, %s, %s);", 
-                       (id_hotel, empleados, categoria_habitacion, price_habitacion))
+    cursor.execute("INSERT INTO w_hoteles (hotel_id, hotel_name, reserva_id, fecha_llegada, fecha_salida, empleados, categoria_habitacion, price_habitacion) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s);", 
+                       (hotel_id, hotel_name, reserva_id, fecha_llegada, fecha_salida, empleados, categoria_habitacion, price_habitacion))
     
     connection.commit() 
     cursor.close()
@@ -63,73 +84,69 @@ def dataframe_wrestaurantes():
 
     try:
         
-        file_name = 'hoteles_json'
-        df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
-        df_hoteles.show()
+        file_name = 'clientes_json'
+        df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
+        #df_clientes.show()
         
-        
-        
-        file_name = 'reservas_data.csv' 
+        file_name='reservas_csv'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_reservas.show()
+        df = df_clientes.join(df_reservas.select("id_cliente","id_restaurante","fecha_llegada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
+        #df.show()
         
         
+        file_name = 'restaurantes_json' 
+        df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
+        #df_restaurantes.show()
+        df = df_reservas.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
         
-        file_name = 'habitaciones_data.csv' 
+        
+        file_name = 'hoteles_json' 
+        df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}")
+        #df_hoteles.show()
+        df = df.join(df_hoteles.select("id_hotel","nombre_hotel","empleados"), "id_hotel", "left")
+        
+       
+        
+        # Habitación
+        file_name = 'habitaciones_csv' 
         df_habitaciones = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         df_habitaciones.show()
+        df_habitaciones = df_habitaciones.withColumnRenamed("numero_habitacion", "habitacion_id")
+         
+        df = df.join(df_habitaciones.select("habitacion_id","categoria","tarifa_por_noche"), "habitacion_id", "left")
         
         
-        df = df_hoteles.join(df_habitaciones.select("id_restaurante","nombre"), "id_restaurante", "left")
-        
-        df = df.withColumnRenamed("nombre", "restaurante_name")   # Cambiar el nombre de la columna
         df.show()
-        
-
-        file_name='menus_csv'      
-        df_menus = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_menus.show()
-        
-        
-        df = df.join(df_menus.select("id_restaurante","id_menu","precio"), "id_restaurante", "left") #### METER UN NOMBRE DE MENU
-        df.show()
-        
-        '''
-        file_name = 'platos'
-        df_platos= spark.read.json(f"s3a://{bucket_name}/{file_name}") 
-        #df_restaurantes.show()
-        df = df.join(df_platos.select("id_restaurante","id_hotel"), "id_restaurante", "left")
-        '''
-        
       
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
-        df = df[[col for col in df.columns if col != "fecha_llegada"]]
-        df = df[[col for col in df.columns if col != "fecha_salida"]]
         df = df[[col for col in df.columns if col != "tipo_habitacion"]]
         df = df[[col for col in df.columns if col != "preferencias_comida"]]
         df = df[[col for col in df.columns if col != "id_restaurante"]]
         df = df[[col for col in df.columns if col != "id_cliente"]]
         # Mostrar el DataFrame resultante
-        df.show()
+        #df.show()
         
-        # df = df.dropDuplicates()    # Eliminar registros duplicados
+        df = df.dropDuplicates()    # Eliminar registros duplicados
 
         for row in df.select("*").collect():
             print(row)
-            id_reserva=row["id_reserva"]
-            restaurante_name=row["restaurante_name"],
-            id_menu=row["id_menu"]
-            menu_price=row["precio"]
             
-            print(f"""
-                  id_reserva-Cliente: {id_reserva}, 
-                  restaurante_name: {restaurante_name},
-                  id_menu: {id_menu},
-                  menu_price: {menu_price}
-                  """)
+            hotel_id=row["id_hotel"]
+            hotel_name=row["nombre_hotel"]
+            reserva_id=row["id_reserva"]
+            fecha_llegada=row["fecha_llegada"]
+            fecha_salida=row["fecha_salida"]
+            empleados=row["empleados"]
+            categoria_habitacion=row["categoria"]
+            price_habitacion=row["tarifa_por_noche"]
             
-            insertarTable_whoteles( id_hotel, empleados, categoria_habitacion, price_habitacion)
+            '''
+            print(f"""id_reserva-Cliente: {id_reserva}, restaurante_name: {restaurante_name},
+                  id_menu: {id_menu},menu_price: {menu_price}
+                  """)'''
+            
+            insertarTable_whoteles( hotel_id, hotel_name, reserva_id, fecha_llegada, fecha_salida, empleados, categoria_habitacion, price_habitacion)
 
            
         spark.stop()
@@ -140,6 +157,7 @@ def dataframe_wrestaurantes():
 
 
 ###
+dropTable_wHoteles()
 createTable_wHoteles()
 dataframe_wrestaurantes()
 ###

@@ -1,7 +1,6 @@
 import psycopg2
 import sessions
 
-
 def createTable_WClientes():
 
     try:
@@ -13,6 +12,8 @@ def createTable_WClientes():
         create_table_query = """
             CREATE TABLE IF NOT EXISTS w_clientes (
                 id_registro SERIAL PRIMARY KEY,
+                
+                id_reserva VARCHAR (100),
                 nombre_cliente VARCHAR (100),
                 fecha_llegada DATE,
                 fecha_salida DATE,
@@ -66,7 +67,7 @@ def dataframe_wcliente():
         #df.show()
         
         
-        file_name = 'restaurantes_data.json' 
+        file_name = 'restaurantes_json' 
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_restaurantes.show()
         df = df_reservas.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
@@ -120,7 +121,3 @@ def dataframe_wcliente():
 createTable_WClientes()
 dataframe_wcliente()
 ###
-
-
-
-

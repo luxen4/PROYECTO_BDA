@@ -4,7 +4,7 @@
 
 
 ### Entrar al locastack ##
-# docker exec -it e43135d670717111f3876b400495c8127c9f834b63a5bfbe4379487585f5d07f /bin/bash    # casa
+# docker exec -it b133839978b1e2c7dc49bcfa834087a6f9abd844f06b0912b60b223aad8cf29b /bin/bash    # casa
 # docker exec -it a89c5d53234a8fac20dc932e1f4e53e48c2eb407d4f78825e711978143a4a0b1 /bin/bash    # clase
 
     # Crear un bucket por comando    ---> awslocal s3api create-bucket --bucket my-local-bucket

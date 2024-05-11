@@ -7,28 +7,47 @@ connection_properties = {"user": "postgres", "password": "casa1234", "driver": "
 
 def select1():
    
-    df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
+    df = spark.read.jdbc(url=jdbc_url, table="w_hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
     
-    df_resultado = spark.sql("""SELECT hotel_name, count(id_reservas) FROM tabla_spark group by hotel_name; """)
+    df_resultado = spark.sql("""SELECT hotel_name, count(reserva_id) FROM tabla_spark group by hotel_name; """)
     df_resultado.show()
     
     
 def select2():
 
-    df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
+    df = spark.read.jdbc(url=jdbc_url, table="w_hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    df_resultado = spark.sql(""" SELECT categoria, count(id_reservas) FROM tabla_spark; """)
+    df_resultado = spark.sql(""" SELECT hotel_name, categoria_habitacion, count(reserva_id) as numero_de_reservas FROM tabla_spark 
+                             group by categoria_habitacion, hotel_name
+                             order by categoria_habitacion, hotel_name desc
+                             """)
     df_resultado.show()
 
 
 def select3():
-
-    df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
+    df = spark.read.jdbc(url=jdbc_url, table="w_hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
     
-    df_resultado = spark.sql("""SELECT SUM(tarifa_nocturna), hotel_name FROM tabla_spark; """)
+    df_resultado = spark.sql("""SELECT hotel_name, SUM(price_habitacion) as cuantia FROM tabla_spark
+                                 group by hotel_name
+                                 order by cuantia desc
+                             ; """)
+    df_resultado.show()
+    
+    
+    
+
+def select10():
+
+    df = spark.read.jdbc(url=jdbc_url, table="w_hoteles", properties=connection_properties)
+    df.createOrReplaceTempView("tabla_spark")
+    
+    df_resultado = spark.sql("""SELECT hotel_name, SUM(price_habitacion) as cuantia FROM tabla_spark
+                                 group by hotel_name
+                                 order by cuantia desc
+                             ; """)
     df_resultado.show()
 
 
@@ -37,16 +56,16 @@ def select4():
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
     
-    df_resultado = spark.sql("""SELECT SUM(tarifa_nocturna), hotel_name FROM tabla_spark group by hotel_name ;""")
+    df_resultado = spark.sql("""SELECT SUM(tarifa_por_noche), hotel_name FROM tabla_spark group by hotel_name ;""")
     df_resultado.show()
     
     
     
 print("¿Cuál es el índice de ocupación de cada hotel?")
-select1()
+#select1()
 
 print("¿Cuál es el índice de ocupación de cada hotel según la categoría de habitación?")
-select2()
+#select2()
 
 print("¿Cuál es el índice de ocupación de cada hotel según la categoría de habitación?")
 select3()

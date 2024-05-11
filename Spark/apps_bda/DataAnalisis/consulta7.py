@@ -11,7 +11,10 @@ def select():
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    df_resultado = spark.sql("""SELECT cliente_name, preferencias_alimenticias, restaurante_name FROM tabla_spark; """)
+    df_resultado = spark.sql("""SELECT cliente_name, preferencia_comida, restaurante_name FROM tabla_spark
+                                order by cliente_name
+                             
+                             ; """)
 
 
     df_resultado.show()
@@ -20,6 +23,14 @@ def select():
   
 print("¿Los clientes con preferencias dietéticas específicas tienden a reservar en restaurantes concretos?")
 select()
+
+
+
+
+'''
+consultar en clientes
+consultar en reservas
+
 
 
 selectZZZZZZ  ()
@@ -31,4 +42,4 @@ selectZZZZZZ  ()
 5.2.7 Comportamiento de los clientes
 ¿Existen pautas en las preferencias de los clientes en función de la época del año?
 ¿Los clientes con preferencias dietéticas específicas tienden a reservar en
-restaurantes concretos?
+restaurantes concretos?'''

@@ -23,16 +23,16 @@ def select2():
     df.createOrReplaceTempView("tabla_spark")
 
     # Ejecutar la consulta SQL para obtener los clientes y sus preferencias de habitación y comida
-    df_resultado = spark.sql("""SELECT plato_nombre, count(plato_nombre) as cantidad FROM tabla_spark
-                                GROUP BY plato_nombre
-                                ORDER BY cantidad
+    df_resultado = spark.sql("""SELECT plato_name, count(plato_name) as cantidad FROM tabla_spark
+                                GROUP BY plato_name
+                                ORDER BY cantidad desc
                                 LIMIT 5; """)
     df_resultado.show()
    
     
     
 print("¿Qué restaurante tiene el precio medio de menú más alto?")
-select1()
+#select1()
 
 print("¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")
 select2()

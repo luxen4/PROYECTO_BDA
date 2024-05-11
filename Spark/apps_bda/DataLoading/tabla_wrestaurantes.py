@@ -1,8 +1,6 @@
 import psycopg2
 import sessions
 
-    
-# Crear una tabla para responder a las preguntas de ANALISIS-VENTAS en WAREHOSE
 def createTable_wRestaurantes():
     try:
         #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
@@ -13,17 +11,18 @@ def createTable_wRestaurantes():
         create_table_query = """
             CREATE TABLE IF NOT EXISTS w_restaurantes (
                 id_registro SERIAL PRIMARY KEY,
+                
                 id_reserva VARCHAR (100),
                 
                 restaurante_id INTEGER,
                 restaurante_name VARCHAR (100),
                 
                 id_menu INTEGER,
-               
                 menu_price DECIMAL(10,2),   
                 
                 plato_id INTEGER,
                 plato_name VARCHAR (100),
+                ingredientes VARCHAR (100),
                 alergenos VARCHAR (100)
             );
         """
@@ -40,14 +39,14 @@ def createTable_wRestaurantes():
         print("An error occurred while creating the table:")
         print(e)  
 
-def insertarTable_wrestaurantes(id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, alergenos):
+def insertarTable_wrestaurantes(id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos):
     
     connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
     # connection = psycopg2.connect( host="my_postgres_service", port="9999", database="primord_db", user="PrimOrd", password="bdaPrimOrd")   
         
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO w_restaurantes (id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, alergenos) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s);", 
-                       (id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, alergenos))
+    cursor.execute("INSERT INTO w_restaurantes (id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s);", 
+                       (id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos))
     
     connection.commit() 
     cursor.close()
@@ -64,11 +63,11 @@ def dataframe_wrestaurantes():
 
     try:
         
-        file_name = 'data_reservas' 
+        file_name = 'reservas_csv' 
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         #df_reservas.show()
         
-        file_name = 'restaurantes_data.json'
+        file_name = 'restaurantes_json'
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         #df_restaurantes.show()
         
@@ -77,7 +76,7 @@ def dataframe_wrestaurantes():
         #df.show()
         
 
-        file_name='data_menus'      
+        file_name='menus_csv'      
         df_menus = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         #df_menus.show()
         
@@ -85,14 +84,14 @@ def dataframe_wrestaurantes():
         #df.show()
         
        
-        file_name = 'data_relaciones'
+        file_name = 'relaciones_csv'
         df_relaciones= spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True) 
         #df_relaciones.show()
         df = df.join(df_relaciones.select("id_menu","id_plato"), "id_menu", "left")
         #df.show()
         
          
-        file_name='data_platos'      
+        file_name='plato_csv'      
         df_platos = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         
         df_platos = df_platos.withColumnRenamed("platoID", "id_plato")   # Cambiar el nombre de la columna
@@ -116,7 +115,7 @@ def dataframe_wrestaurantes():
 
         
         for row in df.select("*").collect():
-            #print(row)
+            print(row)
             id_reserva=row["id_reserva"],
             restaurante_id = row["id_restaurante"]
             restaurante_name=row["restaurante_name"]
@@ -125,21 +124,17 @@ def dataframe_wrestaurantes():
             menu_price=row["precio"]
             plato_id = row["id_plato"]
             plato_name = row["nombre"]
+            ingredientes = row["ingredientes"]
             alergenos = row["alergenos"]
             
-            '''
-            print(f"""
-                  id_reserva-Cliente: {id_reserva}, 
-                  restaurante_id: = {restaurante_id},
-                  restaurante_name: {restaurante_name},
-                  id_menu: {id_menu},
-                  menu_price: {menu_price},
-                  plato_id:{plato_id},
-                  plato_name:{plato_name},
-                  alergenos:{alergenos}
-                  """)'''
             
-            #insertarTable_wrestaurantes( id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, alergenos)
+            print(f""" 
+                  id_reserva-Cliente: {id_reserva}, 
+                  restaurante_id: = {restaurante_id}, restaurante_name: {restaurante_name},
+                  id_menu: {id_menu},  menu_price: {menu_price},
+                  plato_id:{plato_id}, plato_name:{plato_name}, ingredientes:{ingredientes}alergenos:{alergenos}""")
+            
+            insertarTable_wrestaurantes( id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos)
            
         spark.stop()
     
