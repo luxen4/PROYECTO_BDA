@@ -176,8 +176,8 @@ pip install --upgrade pymongo
 ### MYSQL ###
 mysql -u root -p       alberite
 show databases;
-create database retail_db;
-use retail_db;
+create database retail_db;    create database primord_db;
+use retail_db;                use primord_db;
 drop table clientes;
 
 
