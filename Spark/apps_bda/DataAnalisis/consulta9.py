@@ -1,12 +1,12 @@
-from pyspark.sql import SparkSession
-import sessions
+#from pyspark.sql import SparkSession
+#import sessions
 
 jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
 connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
 
-spark = sessions.sesionSpark()
+#spark = sessions.sesionSpark()
 
-def select(categoria,orden):
+def select(spark,categoria,orden):
     print(categoria)
     df = spark.read.jdbc(url=jdbc_url, table="w_hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
@@ -20,22 +20,21 @@ def select(categoria,orden):
 
     df_resultado.show()
     
-    
-    
-print("¿Cómo se comparan los precios de las habitaciones de los distintos hoteles existen valores atípicos?")
-categoria='Deluxe'
-select(categoria,'asc')
-select(categoria,'desc')
+def init(spark):    
+    categoria='Deluxe'
+    select(spark,categoria,'asc')
+    select(categoria,'desc')
 
-categoria='Estandar'
-select(categoria,'asc')
-select(categoria,'desc')
+    categoria='Estandar'
+    select(categoria,'asc')
+    select(categoria,'desc')
 
-categoria='Economica'
-select(categoria,'asc')
-select(categoria,'desc')
+    categoria='Economica'
+    select(categoria,'asc')
+    select(categoria,'desc')    
 
-spark.stop()
+
+#spark.stop()
 '''
 '''
 

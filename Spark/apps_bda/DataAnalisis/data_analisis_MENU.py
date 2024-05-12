@@ -1,56 +1,9 @@
 # Hacer un menu
+import sessions
 
-def opcion1():
-    print("5.2.1 Análisis de las preferencias de los clientes \n" +
-            "¿Cuáles son las preferencias alimenticias más comunes entre los clientes?")
+spark = sessions.sesionSpark()
 
-def opcion2():
-    print("5.2.2 Análisis del rendimiento del restaurante:" +
-            "¿Qué restaurante tiene el precio medio de menú más alto? \n" +
-            "¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")
 
-def opcion3():
-    print("5.2.3 Patrones de reserva \n" +
-            "¿Cuál es la duración media de la estancia de los clientes de un hotel? \n" +
-            "¿Existen periodos de máxima ocupación en función de las fechas de reserva?")
-
-def opcion4():
-    print("5.2.4 Gestión de empleados \n" +
-            "¿Cuántos empleados tiene de media cada hotel?")
-    
-    
-def opcion5():
-    print("5.2.5 Ocupación e ingresos del hotel \n" +
-            "¿Cuál es el índice de ocupación de cada hotel y varía según la categoría de habitación?" +
-            "¿Podemos estimar los ingresos generados por cada hotel basándonos en los \n" +
-            "precios de las habitaciones y los índices de ocupación?")
-    
-def opcion6():
-    print("5.2.6 Análisis de menús \n" +
-            "¿Qué platos son los más y los menos populares entre los restaurantes?" +
-            "¿Hay ingredientes o alérgenos comunes que aparezcan con frecuencia en los platos?")
-    
-def opcion7():
-    print("5.2.7 Comportamiento de los clientes \n" +
-            "¿Existen pautas en las preferencias de los clientes en función de la época del año? \n" +
-            "¿Los clientes con preferencias dietéticas específicas tienden a reservar en \n" +
-            "restaurantes concretos?")
-    
-    
-def opcion8():
-    print("5.2.8 Garantía de calidad \n" +
-            "¿Existen discrepancias entre la disponibilidad de platos comunicada y las reservas \n" +
-            "reales realizadas?") 
-    
-def opcion9():
-    print("5.2.9 Análisis de mercado \n" +
-            "¿Cómo se comparan los precios de las habitaciones de los distintos hoteles y \n" +
-            "existen valores atípicos?")
-    
-def opcion10():
-    print("\n                                               *** Adios *** \n")
-    
-    
 def informacion():
     print("Data Warehouse")
 
@@ -104,50 +57,62 @@ def informacion():
     print("\n 10. Salir")
     
 
-    
-    
-    
-    
-    
 
 
-import consulta1
 
-salir=False
-while salir == False:
+salir='no'
+while salir != 'si':
+    
     informacion()
     opcion = int(input("\n Selecciona una opción: \n"))
     
     if opcion == 1:
-        opcion1()
-        
-        consulta1.select()
-        salir = input("\n Quiere seguir? \n")
+        import consulta1
+        consulta1.select(spark)
         
     elif opcion == 2:
-        opcion2()
+        import consulta2
+        consulta2.select1(spark)
+        consulta2.select2(spark)
+        
     elif opcion == 3:
-        opcion3()
+        import consulta3
+        consulta3.select1(spark)
+        consulta3.select2(spark)
+        consulta3.select3(spark)
+        
     elif opcion == 4:
-        opcion4()
+        import consulta4
+        consulta4.select(spark)
+        
     if opcion == 5:
-        opcion5()
+        print()
     elif opcion == 6:
-        opcion6()
+        import consulta6
+        consulta6.select1(spark)
+        consulta6.select2(spark)
+        consulta6.select3(spark)
     elif opcion == 7:
-        opcion7()
+        import consulta7
+        consulta7.select(spark)
     elif opcion == 8:
-        opcion8()
+        import consulta8
+        consulta8.select(spark)
     elif opcion == 9:
-        opcion9()
+        print("¿Cómo se comparan los precios de las habitaciones de los distintos hoteles existen valores atípicos?")
+        import consulta9
+        consulta9.init()
+       
         
     elif opcion == 10:
-        opcion10()
-        salir=True
+        print("\n                                               *** Adios *** \n")
+        salir="si"
+        break
     else:
         print("Opción no válida")
+        
 
-
+    salir = input("\n Quiere salir? \n")
 
 
 '''
@@ -181,3 +146,25 @@ reales realizadas?
 5.2.9 Análisis de mercado
 ¿Cómo se comparan los precios de las habitaciones de los distintos hoteles y
 existen valores atípicos?'''
+
+# # ¿Cuántas reservas se hicieron para cada categoría de habitación?
+
+
+
+'''
+consultar en clientes
+consultar en reservas
+
+
+
+selectZZZZZZ  ()
+
+# "¿Existen pautas en las preferencias de los clientes en función de la época del año?
+#- Será hoteles preferidos en épocas por mes/o año
+
+
+
+5.2.8 Garantía de calidad
+¿Existen discrepancias entre la disponibilidad de platos comunicada y las reservas
+reales realizadas?
+'''

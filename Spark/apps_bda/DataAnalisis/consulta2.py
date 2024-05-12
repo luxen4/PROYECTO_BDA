@@ -1,11 +1,9 @@
-import sessions
+
 jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
 connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
 
-spark = sessions.sesionSpark()
-
-def select1():
-
+def select1(spark):
+    print("¿Qué restaurante tiene el precio medio de menú más alto?")
     df = spark.read.jdbc(url=jdbc_url, table="w_restaurantes", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
@@ -17,8 +15,9 @@ def select1():
     df_resultado.show()
 
 
-def select2():
 
+def select2(spark):
+    print("¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")
     df = spark.read.jdbc(url=jdbc_url, table="w_restaurantes", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
@@ -28,13 +27,4 @@ def select2():
                                 ORDER BY cantidad desc
                                 LIMIT 5; """)
     df_resultado.show()
-   
-    
-    
-print("¿Qué restaurante tiene el precio medio de menú más alto?")
-#select1()
 
-print("¿Existen tendencias en la disponibilidad de platos en los distintos restaurantes?")
-select2()
-
-spark.stop()

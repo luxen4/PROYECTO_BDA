@@ -60,37 +60,7 @@ if __name__ == "__main__":
 
 
             print(message)
-            producer.send('info', value=message)
+            producer.send('menus_stream', value=message)
 
     # Cerrar la conexión con Neo4j
     neo4j_client.close()
-
-
-  
-
-'''
-# Imprime los resultados
-print("Clientes Mandados:")
-
-for client in resultados:
-    print(client)
-    
-    print("ID del documento:", client["_id"])
-    lista_clientes = client["clients"]
-    
-    for cliente in lista_clientes:
-        id_cliente=cliente["id_cliente"] 
-        nombre=cliente["nombre"]
-        direccion=cliente["direccion"]
-        preferencias_alimenticias = cliente["preferencias_alimenticias"]
-    
-        message = {
-            "id_cliente": id_cliente,
-            "nombre": nombre,
-            "direccion": direccion,
-            "preferencias_alimenticias": preferencias_alimenticias
-        }
-        print(message)
-        producer.send('info', value=message)
-    
-        #sleep(1)'''

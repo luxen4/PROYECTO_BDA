@@ -1,5 +1,5 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json
+from pyspark.sql.functions import from_json, col
 from pyspark.sql.types import StructType, StringType, LongType
 
 spark = SparkSession.builder \
@@ -21,48 +21,63 @@ df =spark  \
   .readStream \
   .format("kafka") \
   .option("kafka.bootstrap.servers", "kafka:9093") \
-  .option("subscribe", "menus_stream") \
+  .option("subscribe", "menus_stream, platos_stream, relaciones_stream") \
   .option("failOnDataLoss",'false') \
   .load()
-  
 
 
-schema = StructType() \
-    .add("id_menu", StringType()) \
-    .add("precio", StringType()) \
-    .add("disponibilidad", StringType()) \
-    .add("id_restaurante", StringType())
-     
+df_menu = df.filter(col("topic") == "menus_stream")
+df_plato = df.filter(col("topic") == "platos_stream")
+df_relaciones = df.filter(col("topic") == "relaciones_stream")
+
+
+schema = StructType()
+entidad=''
+
+
+if df_plato :
+    schema = StructType() \
+        .add("platoID", StringType()) \
+        .add("nombre", StringType()) \
+        .add("ingredientes", StringType()) \
+        .add("alergenos", StringType())
+        
+    entidad='plato1'
+        
+elif df_menu :
+    schema = StructType() \
+        .add("id_menu", StringType()) \
+        .add("precio", StringType()) \
+        .add("disponibilidad", StringType()) \
+        .add("id_restaurante", StringType())
+    entidad='menu1'
+        
+elif df_relaciones :
+    schema = StructType() \
+        .add("id_menu", StringType()) \
+        .add("id_plato", StringType())
+    entidad='relacion1'
+        
 
 # Convert value column to JSON and apply schema
 df = df.selectExpr("CAST(value AS STRING)") \
     .select(from_json("value", schema).alias("data")) \
     .select("data.*")
     
-
-    
-
-# Print schema of DataFrame for debugging
 df.printSchema()
 
 query = df \
     .writeStream \
     .outputMode("append") \
     .format("csv") \
-    .option("path", "s3a://my-local-bucket/menus_csv") \
-    .option("checkpointLocation", "s3a://my-local-bucket/menus")\
+    .option("path", "s3a://my-local-bucket/" + entidad + "_csv") \
+    .option("checkpointLocation", "s3a://my-local-bucket/" + entidad)\
     .option("header", "true")\
     .option("multiline", "true")\
     .start()
-
-'''
-query = df \
-    .writeStream \
-    .outputMode("append") \
-    .format("console") \
-    .start()
-'''
  
 
 # Wait for the termination of the querypython 
 query.awaitTermination()
+
+

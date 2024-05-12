@@ -1,12 +1,10 @@
-import sessions  
+
 jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
 connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
 
-spark = sessions.sesionSpark()
-
-
 # Media en general
-def select1():
+def select1(spark):
+    print("dias")
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
     df_resultado = spark.sql("""SELECT AVG(DATEDIFF(fecha_salida, fecha_entrada)) AS duracion_media FROM tabla_spark; """)
@@ -14,8 +12,8 @@ def select1():
     
     
 # Por semanas    
-def select2():
-
+def select2(spark):
+    print("Por Semanas")
     jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
     connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
 
@@ -30,7 +28,8 @@ def select2():
   
   
 # Por meses  
-def select3():
+def select3(spark):
+    print("Media por meses")
     df = spark.read.jdbc(url=jdbc_url, table="w_reservas", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
@@ -41,17 +40,7 @@ def select3():
 
     df_resultado.show()
    
-
-print("Media general de todos en todo el registro.")
-print("¿Cuál es la duración media de la estancia de los clientes de un hotel?")
-select1()    
-print("Por Semanas")
-select2()
-print("Media por meses")
-select3()
-
-spark.stop()
-
+print("¿Cuál es la duración media de la estancia de los clientes de un hotel)?")
 
 # a W_RESERVAS
 # "¿Cuál es la duración media de la estancia de los clientes de un hotel?

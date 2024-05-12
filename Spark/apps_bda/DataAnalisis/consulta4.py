@@ -1,12 +1,10 @@
-import sessions
 
 jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
 connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
 
-spark = sessions.sesionSpark()
-
-def select():
-    
+def select(spark):
+    print("¿Cuántos empleados tiene de media cada hotel?") 
+    print("Como va a tener una media?...tendrá un nº")   
     df = spark.read.jdbc(url=jdbc_url, table="w_hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
     
@@ -25,11 +23,5 @@ def select():
     """)
     
     media_empleados.show()
-    
-    spark.stop()
-    
-print("¿Cuántos empleados tiene de media cada hotel?")    
-select()
-
 
 
