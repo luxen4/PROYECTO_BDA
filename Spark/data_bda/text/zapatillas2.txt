@@ -1,0 +1,41 @@
+LOW,Air Jordan 1,OG,1986
+LOW,Air Jordan 1,Nu´Retro,(2002;2007-2008)
+LOW,Air Jordan 1,[2004,2007]
+LOW,Air Jordan 1,Velcro,[2008-2009]
+LOW,Air Jordan 1,Phat,[2008-2013]
+LOW,Air Jordan 1,Alpha,[2010]
+LOW,Air Jordan 1,[2012-present]
+
+Mid,Air Jordan 1,Retro,[2001]
+Mid,Air Jordan 1,Retro*[2001]
+Mid,Air Jordan 1,Retro,[2002]
+Mid,Air Jordan 1,Retro,[2003]
+Mid,Air Jordan 1,Prat Mid,[2003]
+Mid,Air Jordan 1,Alpha,[2010]
+Mid,Air Jordan 1,Alpha Outdoor,[2010]
+
+HIGHT,Air Jordan 1,Retro,[1994]
+HIGHT,Air Jordan 1,Retro,[2001]
+HIGHT,Air Jordan 1,Retro,[2008-present]
+HIGHT,Air Jordan 1,Retro Strap,[1994]
+HIGHT,Air Jordan 1,Anodized,[2010]
+HIGHT,Air Jordan 1,Retro OG,[2013-present]
+HIGHT,NiKe S8 Air jordan 1,Retro OG,[2014]
+
+KO,Air Jordan 1,OG,[1986]
+KO,Air Jordan 1,Retro Hight,[2010]
+KO,Air Jordan 1,Hight Premium,[2010]
+KO,Air Jordan 1,Retro Hight,[2012]
+KO,Air Jordan 1,Retro Hight OG,[2014-present]
+
+HYBRID,Air Jordan 1,Prat 20,[2010]
+HYBRID,Air Jordan 1,Retro ´89,[2013]
+HYBRID,Air Jordan 1,Retro ´93,[2013]
+HYBRID,Air Jordan 1,Retro ´95,[2013]
+HYBRID,Air Jordan 1,Retro ´97,[2013]
+HYBRID,Air Jordan 1,Retro ´99,[2014]
+HYBRID,Air Jordan 1,Retro ´94,[2014]
+
+
+
+https://www.pinterest.es/pin/6051780741474561/sent/?invite_code=f2aa9b261397439f8c091e474f566b23&sender=760686330719046663&sfo=1
