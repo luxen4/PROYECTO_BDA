@@ -12,7 +12,7 @@ def descargar_archivo_desde_s3(bucket_name, nombre_archivo, ruta_local):
 
 # Ejemplo de uso
 bucket_name = 'my-local-bucket'
-nombre_archivo = 'data_hoteles.json'
+nombre_archivo = 'clientes_json'
 ruta_local = './archivo.json'
 
 

@@ -47,8 +47,8 @@ query = df \
     .writeStream \
     .outputMode("append") \
     .format("json") \
-    .option("path", "s3a://my-local-bucket/data_platos2") \
-    .option("checkpointLocation", "s3a://my-local-bucket/platos2")\
+    .option("path", "s3a://my-local-bucket/plato_json") \
+    .option("checkpointLocation", "s3a://my-local-bucket/plato_json")\
     .option("multiline", "true")\
     .start()
 

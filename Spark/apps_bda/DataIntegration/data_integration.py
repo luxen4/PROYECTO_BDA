@@ -21,6 +21,7 @@ if __name__ == "__main__":
     except Exception as e:
         print("error reading TXT")
         print(e)
+        
 # Función -> Sube directamente los archivos al bucket
 
 

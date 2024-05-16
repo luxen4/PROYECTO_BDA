@@ -6,7 +6,6 @@ client = MongoClient()                  # Conexión al servidor de MongoDB (por 
 db = client["proyecto"]
 clients_collection = db["clients"]      # Accede a la colección "clients"
 
-
 # Leer un json
 def read_json_file(filename):
     try:

@@ -1,11 +1,14 @@
 import psycopg2
 import sessions
 
+spark = sessions.sesionSpark()
+bucket_name = 'my-local-bucket' 
+
 def dropTable_wReservas():
     try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
+        connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        
         cursor = connection.cursor()
         create_table_query = """ DROP TABLE IF EXISTS w_reservas;"""
         
@@ -24,10 +27,10 @@ def dropTable_wReservas():
 
 
 def createTable_wReservas():
-    try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
+    try: 
+        connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        
         cursor = connection.cursor()
         
         create_table_query = """
@@ -65,8 +68,15 @@ def createTable_wReservas():
         print("An error occurred while creating the table:")
         print(e)  
 
+# Escribe el DataFrame en la tabla de PostgreSQL
+def insertJDBC(df):
+    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"    # Desde dentro es en nombre del contenedor y su puerto
+    connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
+    table_name = "w_reservas" 
+    df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties) # mode="append"
+    
 
-
+'''
 def insertarTable_wreservas(reserva_id, fecha_entrada, fecha_salida, cliente_name ,hotel_id, nombre_hotel,
                     categoria_habitacion, tarifa_nocturna, preferencia_comida, restaurante_id,
                     restaurante_name):
@@ -85,12 +95,10 @@ def insertarTable_wreservas(reserva_id, fecha_entrada, fecha_salida, cliente_nam
     connection.close()
 
     print("Datos cargados correctamente en tabla w_reservas.")
-     
+'''    
      
      
 def dataframe_wreservas():
-    spark = sessions.sesionSpark()
-    bucket_name = 'my-local-bucket' 
 
     try:
     
@@ -136,9 +144,8 @@ def dataframe_wreservas():
        
         #df.show()
         df = df.dropDuplicates()    # Eliminar registros duplicados
-
        
-        
+        '''
         # No tocar que es OK
         for row in df.select("*").collect():
             print(row)
@@ -153,21 +160,16 @@ def dataframe_wreservas():
             preferencia_comida=row["preferencias_alimenticias"]
             restaurante_id=row["id_restaurante"]
             restaurante_name=row["restaurante_name"]
-            '''
-            print(f"""
-                  reserva_id: {reserva_id}, 
-                  fecha_entrada: {fecha_entrada},
-                  fecha_salida: {fecha_salida},
-                  
-                  nombre_hotel: {nombre_hotel}
-                  empleados= {"empleados"}
-                  """)'''
+            
+            print(f""" reserva_id: {reserva_id}, fecha_entrada: {fecha_entrada}""")
             
             
             # Hoteles, reservas, habitaciones, empleados
             insertarTable_wreservas(reserva_id, fecha_entrada, fecha_salida, cliente_name ,hotel_id, nombre_hotel,
                     categoria_habitacion, tarifa_nocturna, preferencia_comida, restaurante_id,
-                    restaurante_name)
+                    restaurante_name)'''
+            
+        insertJDBC(df)
             
         spark.stop()
     

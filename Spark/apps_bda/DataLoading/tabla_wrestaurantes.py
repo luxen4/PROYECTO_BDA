@@ -1,11 +1,34 @@
 import psycopg2
 import sessions
 
+spark = sessions.sesionSpark()
+bucket_name = 'my-local-bucket' 
+
+def dropTable_wRestaurantes():
+    try:
+        connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        
+        cursor = connection.cursor()
+        create_table_query = """ DROP TABLE IF EXISTS w_restaurantes;"""
+        
+        cursor.execute(create_table_query)
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'w_restaurantes' DELETED successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)  
+
+
 def createTable_wRestaurantes():
     try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
+        connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        
         cursor = connection.cursor()
         
         create_table_query = """
@@ -39,11 +62,21 @@ def createTable_wRestaurantes():
         print("An error occurred while creating the table:")
         print(e)  
 
+
+# Escribe el DataFrame en la tabla de PostgreSQL
+def insertJDBC(df):
+    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"    # Desde dentro es en nombre del contenedor y su puerto
+    connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
+    table_name = "w_restaurantes" 
+    df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties) # mode="append"
+    
+
+'''
 def insertarTable_wrestaurantes(id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos):
     
-    connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    # connection = psycopg2.connect( host="my_postgres_service", port="9999", database="primord_db", user="PrimOrd", password="bdaPrimOrd")   
-        
+    connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+         
     cursor = connection.cursor()
     cursor.execute("INSERT INTO w_restaurantes (id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos) VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s);", 
                        (id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos))
@@ -53,13 +86,10 @@ def insertarTable_wrestaurantes(id_reserva, restaurante_id, restaurante_name, id
     connection.close()
 
     print("Datos cargados correctamente en tabla w_restaurantes.")
-     
+'''     
      
      
 def dataframe_wrestaurantes():
-    
-    spark = sessions.sesionSpark()
-    bucket_name = 'my-local-bucket' 
 
     try:
         
@@ -88,7 +118,6 @@ def dataframe_wrestaurantes():
         df_relaciones= spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True) 
         #df_relaciones.show()
         df = df.join(df_relaciones.select("id_menu","id_plato"), "id_menu", "left")
-        #df.show()
         
          
         file_name='plato_csv'      
@@ -96,9 +125,6 @@ def dataframe_wrestaurantes():
         
         df_platos = df_platos.withColumnRenamed("platoID", "id_plato")   # Cambiar el nombre de la columna
         df_platos.show()
-        
-        df.show()
-        
         df = df.join(df_platos.select("id_plato","nombre","ingredientes","alergenos"), "id_plato", "left") #### METER UN NOMBRE DE MENU
         
         # Eliminar columnas"
@@ -108,12 +134,10 @@ def dataframe_wrestaurantes():
         df = df[[col for col in df.columns if col != "tipo_habitacion"]]
         df = df[[col for col in df.columns if col != "preferencias_comida"]]
         df = df[[col for col in df.columns if col != "id_cliente"]]
-        # Mostrar el DataFrame resultante
       
-        
-        # df = df.dropDuplicates()    # Eliminar registros duplicados
-
-        
+        df = df.dropDuplicates()    # Eliminar registros duplicados
+        df.show()
+        '''
         for row in df.select("*").collect():
             print(row)
             id_reserva=row["id_reserva"],
@@ -135,22 +159,19 @@ def dataframe_wrestaurantes():
                   plato_id:{plato_id}, plato_name:{plato_name}, ingredientes:{ingredientes}alergenos:{alergenos}""")
             
             insertarTable_wrestaurantes( id_reserva, restaurante_id, restaurante_name, id_menu, menu_price, plato_id, plato_name, ingredientes, alergenos)
-           
-        spark.stop()
+            '''
+            
+        insertJDBC(df)
+        
     
     except Exception as e:
         print("error reading TXT")
         print(e)
 
 ###
+dropTable_wRestaurantes()
 createTable_wRestaurantes()
 dataframe_wrestaurantes()
 ###
 
-
-
-
-# https://stackoverflow.com/questions/65114334/pyspark-join-with-different-column-names-and-cant-be-hard-coded-before-runti      
-# left_key = 'leftColname'
-# right_key = 'rightColname'
-# final = ta.join(tb, ta[left_key] == tb[right_key], how='left')
+spark.stop()

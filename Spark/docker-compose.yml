@@ -60,41 +60,57 @@ services:
       - ./generation_bda:/opt/spark-generation
 
   
-  database:
-    hostname: my_postgres_service
-    image: postgres:16.2-alpine
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=casa1234
-    volumes:
-      - "postgres:/var/lib/postgresql/data"
-  
-
   #database:
   #  hostname: my_postgres_service
   #  image: postgres:16.2-alpine
   #  ports:
-  #    - "9999:5432"
+  #    - "5432:5432"
   #  environment:
-  #    - POSTGRES_PASSWORD=bdaPrimOrd
-  #    - POSTGRES_USER=primOrd
-  #    - POSTGRES_DB=PrimOrd
+  #    - POSTGRES_PASSWORD=casa1234
   #  volumes:
   #    - "postgres:/var/lib/postgresql/data"
+  
+
+# Tiene que funcionar                         OK
+  database:
+    hostname: my_postgres_service
+    image: postgres
+    ports:
+      - "9999:5432"
+    environment:
+      - POSTGRES_PASSWORD=bdaprimord
+      - POSTGRES_USER=primord
+      - POSTGRES_DB=primord
+    volumes:
+      - postgres:/var/lib/postgresql/data
 
 
 
 
 
+#  mongodb:
+#    image: mongo
+#    hostname: mongodb
+#    restart: always
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongodb_data:/data/db
+
+# Esta tiene que funcionar
   mongodb:
     image: mongo
     hostname: mongodb
+    environment:
+       MONGO_INITDB_ROOT_USERNAME: root
+       MONGO_INITDB_ROOT_PASSWORD: secret
+       MONGO_INITDB_DATABASE: proyecto
     restart: always
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+
 
   neo4j:
     image: neo4j:5.19

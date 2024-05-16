@@ -1,12 +1,34 @@
 import psycopg2
 import sessions
 
-def createTable_WClientes():
+spark = sessions.sesionSpark()
+bucket_name = 'my-local-bucket' 
 
+
+def dropTable_wClientes():
     try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    
+        
+        connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   
+        cursor = connection.cursor()
+        cursor.execute(""" DROP TABLE IF EXISTS w_clientes;""")
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'w_clientes' DELETED successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)  
+
+
+
+
+def createTable_WClientes():
+    try:
+        connection = psycopg2.connect(host="spark-database-1", port="5432", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
         cursor = connection.cursor()
         
         create_table_query = """
@@ -31,8 +53,16 @@ def createTable_WClientes():
     except Exception as e:
         print("An error occurred while creating the table:")
         print(e)
-    
-
+ 
+ 
+# Escribe el DataFrame en la tabla de PostgreSQL
+def insertJDBC(df):
+    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"    # Desde dentro es en nombre del contenedor y su puerto
+    connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
+    table_name = "w_clientes" 
+    df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties) # mode="append"
+       
+'''
 def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, nombre_hotel):
     
     connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
@@ -47,19 +77,15 @@ def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, prefere
     connection.close()
 
     print("Datos cargados correctamente en tabla Cliente.")
-     
+'''    
      
      
 def dataframe_wcliente():
     
-    spark = sessions.sesionSpark()
-    bucket_name = 'my-local-bucket' 
-
     try:
-        
         file_name = 'clientes_json'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
-        df_clientes.show()
+        #df_clientes.show()
         
         file_name='reservas_csv'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
@@ -90,7 +116,7 @@ def dataframe_wcliente():
         df.show()
         
         # df = df.dropDuplicates()    # Eliminar registros duplicados
-
+        '''
         for row in df.select("*").collect():
             nombre_cliente=row["nombre_hotel"],
             fecha_llegada=row["fecha_llegada"]
@@ -108,7 +134,9 @@ def dataframe_wcliente():
                   Nombre_Hotel: {nombre_hotel}
                   """)
             
-            insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, nombre_hotel)
+            insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, nombre_hotel)'''
+       
+        insertJDBC(df)
        
         spark.stop()
     
@@ -118,6 +146,7 @@ def dataframe_wcliente():
 
 
 ###
+dropTable_wClientes()
 createTable_WClientes()
 dataframe_wcliente()
 ###

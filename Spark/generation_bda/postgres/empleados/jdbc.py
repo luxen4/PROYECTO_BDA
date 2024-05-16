@@ -14,28 +14,28 @@ def sesionSpark():
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:3.3.1") \
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
-        .config("spark.driver.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-        .config("spark.executor.extraClassPath", "/opt/spark/jars/hadoop-aws-3.3.1.jar") \
-        .config("spark.jars","./../postgresql-42.7.3.jar") \
+        .config("spark.driver.extraClassPath", "/opt/spark-apps/hadoop-aws-3.4.0.jar") \
+        .config("spark.executor.extraClassPath", "/opt/spark-apps/hadoop-aws-3.4.0.jar") \
+        .config("spark.jars","/opt/spark-apps/hadoop-aws-3.4.0.jar") \
+        .config("spark.jars","/opt/spark-apps/postgresql-42.7.3.jar") \
         .config("spark.driver.extraClassPath", "/opt/spark-apps/postgresql-42.7.3.jar") \
         .master("local[*]") \
         .getOrCreate()
-
-    return spark
+        # .config("spark.jars","./../postgresql-42.7.3.jar") \
+    return spark 
         
         
 def leerPostgres():
     spark = sesionSpark()
         
-    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
-    connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
-
+    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"                                                # Desde dentro es en nombre del contenedor y su puerto
+    connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
+    
     df = spark.read.jdbc(url=jdbc_url, table="empleados", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
     resultado = spark.sql("SELECT * FROM tabla_spark;")
     resultado.show()
-    
     
     resultado \
     .write \
@@ -45,6 +45,9 @@ def leerPostgres():
     .option("fs.s3a.fast.upload.buffer", "bytebuffer")\
     .mode('overwrite') \
     .csv(path='s3a://my-local-bucket/empleados_csv', sep=',')
+    
+    
+    
 
 
     spark.stop()
