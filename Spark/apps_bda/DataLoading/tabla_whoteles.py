@@ -44,6 +44,7 @@ def createTable_wHoteles():
                 fecha_salida Date,
                 
                 empleados INTEGER,
+                empleados INTEGER,
                 categoria_habitacion VARCHAR (100),
                 price_habitacion DECIMAL(10,2)
             );
@@ -85,16 +86,10 @@ def insertarTable_whoteles(hotel_id, hotel_name, reserva_id, fecha_llegada, fech
 
     print("Datos cargados correctamente en tabla w_restaurantes.")
 '''
-
-
-# Define una función UDF (User Defined Function) para convertir el string en array
-def string_to_array(s):
-    return s.strip("[]").split(",")
-
-   
      
 def dataframe_wrestaurantes():
     
+    #spark = sessions.sesionSpark()
     #spark = sessions.sesionSpark()
     bucket_name = 'my-local-bucket' 
 
@@ -177,6 +172,8 @@ def dataframe_wrestaurantes():
 
 
 ###
+
+
 dropTable_wHoteles()
 createTable_wHoteles()
 dataframe_wrestaurantes()

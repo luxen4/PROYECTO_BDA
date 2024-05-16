@@ -4,7 +4,8 @@ import csv
   
 def createTable_empleados():
     try:
-        connection = psycopg2.connect(host="localhost", port="9999", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect(host="localhost", port="9999", 
+                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
         # Probar mayusculas 
          
         cursor = connection.cursor()

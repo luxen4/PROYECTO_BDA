@@ -71,6 +71,8 @@ services:
   #    - "postgres:/var/lib/postgresql/data"
   
 
+
+
 # Tiene que funcionar                         OK
   database:
     hostname: my_postgres_service
@@ -88,16 +90,6 @@ services:
 
 
 
-#  mongodb:
-#    image: mongo
-#    hostname: mongodb
-#    restart: always
-#    ports:
-#      - "27017:27017"
-#    volumes:
-#      - mongodb_data:/data/db
-
-# Esta tiene que funcionar
   mongodb:
     image: mongo
     hostname: mongodb
