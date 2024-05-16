@@ -1,10 +1,19 @@
 import psycopg2
 import sessions
+from pyspark.sql.functions import udf, col, size
+from pyspark.sql.types import IntegerType
+from pyspark.sql.functions import col, length, regexp_replace, split
+
+
+spark = sessions.sesionSpark()
+
 
 def dropTable_wHoteles():
     try:
-        #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        # host="localhost", port="5432", database="primord", user="primord", password="bdaprimord"
+        # connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect( host="spark-database-1", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+    
     
         cursor = connection.cursor()
         create_table_query = """ DROP TABLE IF EXISTS w_hoteles;"""
@@ -26,7 +35,7 @@ def dropTable_wHoteles():
 def createTable_wHoteles():
     try:
         #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect(host="spark-database-1", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
     
         cursor = connection.cursor()
         
@@ -42,7 +51,7 @@ def createTable_wHoteles():
                 fecha_llegada Date,
                 fecha_salida Date,
                 
-                empleados VARCHAR (100),
+                empleados INTEGER,
                 categoria_habitacion VARCHAR (100),
                 price_habitacion DECIMAL(10,2)
             );
@@ -60,6 +69,26 @@ def createTable_wHoteles():
         print(e)    
 
 
+def insertJDBC(df):
+    
+    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"                                                # Desde dentro es en nombre del contenedor y su puerto
+    connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
+    
+    
+    # jdbc_url = "jdbc:postgresql://spark-database-1:5432/retail_db"
+    # connection_properties = { "user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
+
+    table_name = "w_hoteles" 
+    
+    # Escribe el DataFrame en la tabla de PostgreSQL
+    df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties) # mode="append"
+    
+
+
+
+
+
+'''
 def insertarTable_whoteles(hotel_id, hotel_name, reserva_id, fecha_llegada, fecha_salida, empleados, categoria_habitacion, price_habitacion):
     
     connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
@@ -74,12 +103,18 @@ def insertarTable_whoteles(hotel_id, hotel_name, reserva_id, fecha_llegada, fech
     connection.close()
 
     print("Datos cargados correctamente en tabla w_restaurantes.")
-     
-     
+'''
+
+
+# Define una función UDF (User Defined Function) para convertir el string en array
+def string_to_array(s):
+    return s.strip("[]").split(",")
+
+   
      
 def dataframe_wrestaurantes():
     
-    spark = sessions.sesionSpark()
+    #spark = sessions.sesionSpark()
     bucket_name = 'my-local-bucket' 
 
     try:
@@ -116,7 +151,7 @@ def dataframe_wrestaurantes():
         df = df.join(df_habitaciones.select("habitacion_id","categoria","tarifa_por_noche"), "habitacion_id", "left")
         
         
-        df.show()
+        
       
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
@@ -128,7 +163,7 @@ def dataframe_wrestaurantes():
         #df.show()
         
         df = df.dropDuplicates()    # Eliminar registros duplicados
-
+        '''
         for row in df.select("*").collect():
             print(row)
             
@@ -141,13 +176,66 @@ def dataframe_wrestaurantes():
             categoria_habitacion=row["categoria"]
             price_habitacion=row["tarifa_por_noche"]
             
-            '''
+            
             print(f"""id_reserva-Cliente: {id_reserva}, restaurante_name: {restaurante_name},
                   id_menu: {id_menu},menu_price: {menu_price}
-                  """)'''
+                  """)
             
             insertarTable_whoteles( hotel_id, hotel_name, reserva_id, fecha_llegada, fecha_salida, empleados, categoria_habitacion, price_habitacion)
+            '''
+        
+        '''
+        df.show()
+        
+        
+        # Registra la función UDF
+        string_to_array_udf = udf(string_to_array)
 
+        # Aplica la función UDF para convertir la columna de string en array
+        df_array = df.withColumn("nueva_columna_array", string_to_array_udf(col("empleados")))
+        df_array.show()
+
+        df.select("empleados").show()
+     
+        
+        # Extraer la columna de nombre utilizando comprensión de listas
+        name_list = [row.empleados for row in df.select('empleados').collect()]
+        
+        # Imprimir la lista
+        print(len(name_list))
+
+
+
+       
+        # Calcula la longitud de cada array
+        df_with_length = df_array.withColumn("longitud_array", 
+                                            udf(lambda arr: len(arr), IntegerType())(col("nueva_columna_array")))
+
+        # Muestra el resultado
+        df_with_length.show()
+ 
+        
+        
+        # Cuenta el número de comas en cada registro
+        df_con_comas = df.withColumn("numero_comas", length(col("empleados")) - length(regexp_replace(col("empleados"), "[^,]", "")))
+
+        # Muestra el resultado
+        df_con_comas.show()'''
+           
+        
+        
+        df = df.select("empleados") 
+        
+        # Reemplazar los valores vacíos en la columna "empleados" con 0
+        df = df.fillna({'empleados': ''})
+        df = df.withColumn("empleados", regexp_replace("empleados", "\[", ""))
+        df = df.withColumn("empleados", regexp_replace("empleados", "\]", ""))
+
+        df_dividido = df.withColumn("empleados", size(split(df["empleados"], ",")))
+        df_dividido.show(1000)
+            
+            
+        #insertJDBC(df)
            
         spark.stop()
     
@@ -157,9 +245,13 @@ def dataframe_wrestaurantes():
 
 
 ###
+
+
 dropTable_wHoteles()
 createTable_wHoteles()
 dataframe_wrestaurantes()
+
+
 ###
 
 

@@ -27,9 +27,9 @@ def sesionSpark():
 def leerPostgres():
     spark = sesionSpark()
         
-    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
-    connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
-
+    jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"                                                # Desde dentro es en nombre del contenedor y su puerto
+    connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
+    
     df = spark.read.jdbc(url=jdbc_url, table="hoteles", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 

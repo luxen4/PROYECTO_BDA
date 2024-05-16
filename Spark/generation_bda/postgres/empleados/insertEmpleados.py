@@ -4,9 +4,9 @@ import csv
   
 def createTable_empleados():
     try:
-        connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-        #connection = psycopg2.connect( host="localhost", port="9999", database="primOrd_db", user="primOrd", password="bdaPrimOrd")   # Conexión a la base de datos PostgreSQL
-    
+        connection = psycopg2.connect(host="localhost", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        # Probar mayusculas 
+         
         cursor = connection.cursor()
 
         create_table_query = """
@@ -30,8 +30,7 @@ def createTable_empleados():
 
 def insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion):
     
-    #connection = psycopg2.connect( host="my_postgres_service", port="5432", database="warehouse_retail_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
-    connection = psycopg2.connect( host="localhost", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+    connection = psycopg2.connect( host="localhost", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
     
     cursor = connection.cursor()
     cursor.execute("INSERT INTO empleados (id_empleado,nombre,posicion,fecha_contratacion) VALUES (%s, %s, %s, %s);", 
@@ -57,9 +56,11 @@ def readCSV_Empleados(filename):
             posicion = row[2]
             fecha_contratacion = row[3]
             insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion)
-            # Probar que lo meta con jdbc
- 
             
 createTable_empleados()
 filename="./../../../data_bda/csv/empleados.csv"
 readCSV_Empleados(filename)
+
+
+
+# Probar que lo meta con jdbc, se va a hacer en el warehouse.
