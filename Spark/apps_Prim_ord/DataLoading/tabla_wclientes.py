@@ -36,10 +36,16 @@ def createTable_WClientes():
                 id_registro SERIAL PRIMARY KEY,
                 
                 id_reserva VARCHAR (100),
+                
+                id_cliente INTEGER,
                 nombre_cliente VARCHAR (100),
+                
                 fecha_llegada DATE,
                 fecha_salida DATE,
+                
                 preferencias_comida VARCHAR (100),
+                
+                id_hotel INTEGER,
                 nombre_hotel VARCHAR (100)
             );
         """
@@ -62,10 +68,10 @@ def insertJDBC(df):
     table_name = "w_clientes" 
     df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties) # mode="append"
        
-'''
+
 def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, nombre_hotel):
     
-    connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord_db", user="postgres", password="casa1234")   # Conexión a la base de datos PostgreSQL
+    connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
     # connection = psycopg2.connect( host="my_postgres_service", port="9999", database="primord_db", user="PrimOrd", password="bdaPrimOrd")   
         
     cursor = connection.cursor()
@@ -77,7 +83,7 @@ def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, prefere
     connection.close()
 
     print("Datos cargados correctamente en tabla Cliente.")
-'''    
+  
      
      
 def dataframe_wcliente():
@@ -85,6 +91,7 @@ def dataframe_wcliente():
     try:
         file_name = 'clientes_json'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
+        df_clientes = df_clientes.withColumnRenamed("nombre", "nombre_cliente")
         #df_clientes.show()
         
         file_name='reservas_csv'
@@ -96,33 +103,38 @@ def dataframe_wcliente():
         file_name = 'restaurantes_json' 
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_restaurantes.show()
-        df = df_reservas.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
+        df = df.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
         
         
         file_name = 'hoteles_json' 
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_hoteles.show()
         df = df.join(df_hoteles.select("id_hotel","nombre_hotel"), "id_hotel", "left")
-        #df.show()
+        df.show()
        
       
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
-        df = df[[col for col in df.columns if col != "id_restaurante"]]
+        #df = df[[col for col in df.columns if col != "id_restaurante"]]
         df = df[[col for col in df.columns if col != "direccion"]]
-        df = df[[col for col in df.columns if col != "id_cliente"]]
-        df = df[[col for col in df.columns if col != "id_hotel"]]
+        #df = df[[col for col in df.columns if col != "id_cliente"]]
+        #df = df[[col for col in df.columns if col != "id_hotel"]]
         # Mostrar el DataFrame resultante
-        df.show()
+        #df.show()
         
         # df = df.dropDuplicates()    # Eliminar registros duplicados
-        '''
+        
         for row in df.select("*").collect():
-            nombre_cliente=row["nombre_hotel"],
+            print(row)
+            '''
+            id_reserva=row["id_reserva"]
+            id_cliente=row["id_cliente"]
+            nombre_cliente=row["nombre_cliente"],
             fecha_llegada=row["fecha_llegada"]
             fecha_salida=row["fecha_salida"]
             tipo_habitacion=row["tipo_habitacion"]
             preferencias_comida = row["preferencias_comida"]
+            id_hotel=row["id_hotel"]
             nombre_hotel= row["nombre_hotel"]
             
             print(f"""
@@ -131,10 +143,10 @@ def dataframe_wcliente():
                   Fecha-Salida: {fecha_salida},
                   Tipo-Habitación: {tipo_habitacion},
                   Preferencias-Comida: {preferencias_comida},
-                  Nombre_Hotel: {nombre_hotel}
+                  Nombre-Hotel: {nombre_hotel}
                   """)
-            
-            insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, nombre_hotel)'''
+
+            insertarTable_wcliente( id_reserva, id_cliente, nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, id_hotel, nombre_hotel)'''
        
         insertJDBC(df)
        

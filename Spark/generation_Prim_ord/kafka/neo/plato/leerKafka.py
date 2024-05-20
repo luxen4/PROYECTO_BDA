@@ -24,8 +24,8 @@ def leerConSpark():
         
         # csv
         bucket_name = 'my-local-bucket' 
-        folder_name='reservas_csv'
-        df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
+        #folder_name='plato_csv'
+        #df= spark.read.csv(f"s3a://{bucket_name}/{folder_name}", header=True, inferSchema=True)
         
         '''
 # Leer un Dataframe
@@ -48,8 +48,8 @@ def leerResultados(resultado):
         
         #json
         bucket_name = 'my-local-bucket' 
-        #folder_name='plato_json'
-        #df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
+        folder_name='restaurantes_json'
+        df= spark.read.json(f"s3a://{bucket_name}/{folder_name}")
         
 
         df.show()

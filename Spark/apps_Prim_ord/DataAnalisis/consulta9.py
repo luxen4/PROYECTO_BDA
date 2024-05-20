@@ -1,8 +1,8 @@
 #from pyspark.sql import SparkSession
 #import sessions
 
-jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
-connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
+jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"
+connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
 
 #spark = sessions.sesionSpark()
 
@@ -12,26 +12,26 @@ def select(spark,categoria,orden):
     df.createOrReplaceTempView("tabla_spark")
 
     df_resultado = spark.sql(f"""
-                                SELECT hotel_name, price_habitacion 
+                                SELECT nombre_hotel, tarifa_por_noche 
                                 FROM tabla_spark 
-                                WHERE categoria_habitacion = '{categoria}'
-                                ORDER BY price_habitacion {orden}
+                                WHERE categoria = '{categoria}'
+                                ORDER BY tarifa_por_noche {orden}
                             """)
 
     df_resultado.show()
     
 def init(spark):    
     categoria='Deluxe'
-    select(spark,categoria,'asc')
-    select(categoria,'desc')
+    select(spark, categoria,'asc')
+    select(spark, categoria,'desc')
 
     categoria='Estandar'
-    select(categoria,'asc')
-    select(categoria,'desc')
+    select(spark, categoria,'asc')
+    select(spark, categoria,'desc')
 
     categoria='Economica'
-    select(categoria,'asc')
-    select(categoria,'desc')    
+    select(spark, categoria,'asc')
+    select(spark, categoria,'desc')    
 
 
 #spark.stop()

@@ -1,22 +1,19 @@
+jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"
+connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
 
 
-jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord_db"
-connection_properties = {"user": "postgres", "password": "casa1234", "driver": "org.postgresql.Driver"}
-
-
-
-def select1(spark):
+def platosPopulares(spark):
     print("¿Qué platos son los más y los menos populares entre los restaurantes?")
     df = spark.read.jdbc(url=jdbc_url, table="w_restaurantes", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
 
-    df_resultado = spark.sql(""" SELECT plato_name, count(plato_name) as veces FROM tabla_spark
-                                    group by plato_name
+    df_resultado = spark.sql(""" SELECT nombre, count(nombre) as veces FROM tabla_spark
+                                    group by nombre
                                     order by veces desc ; """)
     df_resultado.show()
     
     
-def select2(spark):
+def frecuenciaAlergenos(spark):
     print("¿Hay alérgenos comunes que aparezcan con frecuencia en los platos?")
     df = spark.read.jdbc(url=jdbc_url, table="w_restaurantes", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
@@ -27,7 +24,7 @@ def select2(spark):
     df_resultado.show()
 
 
-def select3(spark):
+def ingredientesComunes(spark):
     print("¿Hay ingredientes comunes que aparezcan con frecuencia en los platos?")
     df = spark.read.jdbc(url=jdbc_url, table="w_restaurantes", properties=connection_properties)
     df.createOrReplaceTempView("tabla_spark")
