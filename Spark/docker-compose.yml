@@ -8,9 +8,9 @@ services:
       - "9090:8080"
       - "7077:7077"
     volumes:
-      - ./apps_bda:/opt/spark-apps
-      - ./data_bda:/opt/spark-data
-      - ./generation_bda:/opt/spark-generation
+      - ./apps_Prim_ord:/opt/spark-apps
+      - ./data_Prim_ord:/opt/spark-data
+      - ./generation_Prim_ord:/opt/spark-generation
     environment:
       - SPARK_LOCAL_IP=spark-master
       - SPARK_WORKLOAD=master
@@ -33,9 +33,9 @@ services:
       - SPARK_WORKLOAD=worker
       - SPARK_LOCAL_IP=spark-worker-a
     volumes:
-      - ./apps_bda:/opt/spark-apps
-      - ./data_bda:/opt/spark-data
-      - ./generation_bda:/opt/spark-generation
+      - ./apps_Prim_ord:/opt/spark-apps
+      - ./data_Prim_ord:/opt/spark-data
+      - ./genetation_Prim_ord:/opt/spark-generation
 
   spark-worker-b:
     build:
@@ -55,9 +55,9 @@ services:
       - SPARK_WORKLOAD=worker
       - SPARK_LOCAL_IP=spark-worker-b
     volumes:
-      - ./apps_bda:/opt/spark-apps
-      - ./data_bda:/opt/spark-data
-      - ./generation_bda:/opt/spark-generation
+      - ./apps_Prim_ord:/opt/spark-apps
+      - ./data_Prim_ord:/opt/spark-data
+      - ./generation_Prim_ord:/opt/spark-generation
 
   
   #database:
