@@ -1,7 +1,7 @@
 import mysql.connector
 import random, string
 
-conexion = mysql.connector.connect( host="localhost", user="root", password="alberite", database="primord_db")
+conexion = mysql.connector.connect( host="localhost", user="user1", password="alberite", database="retail_db")
 cursor = conexion.cursor()
 
 
@@ -37,5 +37,5 @@ def read_text_file(filename):
         print(f"File '{filename}' not found.")
 
 
-filename = "./Spark/data_bda/text/gastos.txt"
+filename = "./Spark/data_Prim_ord/text/gastos.txt"
 read_text_file(filename)

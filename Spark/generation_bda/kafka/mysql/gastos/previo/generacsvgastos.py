@@ -46,4 +46,4 @@ for _ in range(1000):
 
 
 # fecha,id_hotel,concepto,monto,pagado
-create_text_file("./Spark/data_bda/text/gastgastos.txt", gastos)
+create_text_file("./Spark/data_Prim_ord/text/gastos.txt", gastos)
