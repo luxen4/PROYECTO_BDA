@@ -1,6 +1,5 @@
-# Hacer un menu
-import sessions
 
+import sessions
 spark = sessions.sesionSpark()
 
 

@@ -49,7 +49,7 @@
                                                                                                           
 # cd '.\Tema 4\'
 # cd .\Spark\
-# docker exec -it 39f9b5d69b610547150956962d27390a4c04fa994ba1a1144f5d80d025dc0db9 /bin/bash   # casa  
+# docker exec -it spark-spark-master-1 /bin/bash   # casa  
 # docker exec -it 0fe0b6f3a18314b1f9275fed8fe3235c71e01ba9391bbdb78773b8eeaa640a4a /bin/bash   # clase
 # cd /opt/spark-apps     cd /opt/spark-data
 

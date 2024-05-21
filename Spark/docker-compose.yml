@@ -35,7 +35,7 @@ services:
     volumes:
       - ./apps_Prim_ord:/opt/spark-apps
       - ./data_Prim_ord:/opt/spark-data
-      - ./genetation_Prim_ord:/opt/spark-generation
+      - ./generation_Prim_ord:/opt/spark-generation
 
   spark-worker-b:
     build:
