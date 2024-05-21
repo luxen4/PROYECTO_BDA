@@ -2,25 +2,54 @@
 from time import sleep                      
 from json import dumps
 from kafka import KafkaProducer
+import json, csv
 
 import mysql.connector
-import csv, json
 
-conexion = mysql.connector.connect( host="localhost",user="root",password="alberite",database="primord_db")
+# Por si se quiere crear un archivo desde la consulta desde mysql
+# Después de una consulta que guarde en un archivo
 
-cursor = conexion.cursor()      # Crear un cursor
-sql = "SELECT * FROM gastos"    # Consulta SQL para seleccionar todos los clientes
 
-# Ejecutar la consulta
-cursor.execute(sql)
+# Guardar los datos en el archivo JSON
+def create_csv_file(file_name, data):
+    with open(file_name, "w") as archivo_json:
+        json.dump(data, archivo_json, indent=4)
 
-# Obtener todos los resultados
-resultados = cursor.fetchall()
+    print(f"Los datos se han guardado en el archivo {file_name}")
 
+
+# Guardar los datos en el archivo CSV
+# Guardar los resultados en un archivo CSV  
+def create_csv_file(filename, data):
+    
+    with open(filename, "w", newline="") as file:
+        writer = csv.writer(file) 
+
+        writer.writerow(["id_hotel", "fecha", "concepto", "monto", "pagado"])  # Escribir el encabezado
+        
+        for gasto in data:
+            writer.writerow([gasto['id_hotel'], gasto['fecha'], gasto['concepto'], gasto['monto'], gasto['pagado']])
+    
+    print(f"Archivo CSV '{filename}' generado exitosamente.")
+
+
+
+
+# Función para consulta, devuelve una tupla
+def selectGastos():
+    conexion = mysql.connector.connect( host="localhost",user="user1",password="alberite",database="retail_db")
+
+    cursor = conexion.cursor()      # Crear un cursor
+    sql = "SELECT * FROM gastos"    # Consulta SQL para seleccionar todos los clientes
+    cursor.execute(sql)             # Ejecutar la consulta
+    resultados = cursor.fetchall()  # Obtener todos los resultados
+    return resultados
 
 
 producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=lambda x: dumps(x).encode('utf-8'))
 #producer = KafkaProducer(bootstrap_servers= ['kafka:9093'], value_serializer=lambda x: dumps(x).encode('utf-8'))
+
+resultados = selectGastos()
 
 print("Mandados:")
 lista_gastos = []
@@ -44,38 +73,18 @@ for gasto in resultados:
     
     lista_gastos.append(message)
     
-    print(message)
+    #print(message)
     producer.send('gastos_stream', value=message)
         
     #sleep(1)
         
-        
-        
-        
-
-''' Por si se quiere crear un archivo desde la consulta desde mysql
-# Después de una consulta que guarde en un archivo
-nombre_archivo = "./Spark/data_bda/text/gastosWWW.json"
-# Guardar los datos en el archivo JSON
-with open(nombre_archivo, "w") as archivo_json:
-    json.dump(lista_gastos, archivo_json, indent=4)
-
-print(f"Los datos se han guardado en el archivo {nombre_archivo}")
+file_name = "./Spark/data_Prim_ord/json/gastos.json"
+#create_json_file(file_name, lista_gastos)  
 
 
+    
 # Después de obtener los resultados
-nombre_archivo = "./Spark/data_bda/text/gastosWWW.csv"
+file_name = "./Spark/data_Prim_ord/csv/gastosADRIAN.csv"     
+#create_csv_file(file_name, lista_gastos)
+        
 
-# Guardar los datos en el archivo CSV
-with open(nombre_archivo, "w", newline="") as archivo_csv:
-    escritor_csv = csv.writer(archivo_csv)
-    
-    # Escribir el encabezado del archivo CSV
-    escritor_csv.writerow(["id", "fecha", "id_hotel", "concepto", "monto", "pagado"])
-    
-    # Escribir los datos de los gastos en el archivo CSV
-    for gasto in resultados:
-        escritor_csv.writerow(gasto)
-
-print(f"Los datos se han guardado en el archivo {nombre_archivo}")
-'''
