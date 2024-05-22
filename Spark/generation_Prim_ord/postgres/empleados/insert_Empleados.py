@@ -1,6 +1,27 @@
 # 1º Crear las tablas de cada uno
 import psycopg2
 import csv
+
+
+def dropTable_empleados():
+    try:
+        connection = psycopg2.connect(host="localhost", port="9999", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        # Probar mayusculas 
+         
+        cursor = connection.cursor()
+
+        create_table_query = """ DROP TABLE IF EXISTS empleados; """
+        cursor.execute(create_table_query)
+        connection.commit()
+        
+        cursor.close()
+        connection.close()
+        
+        print("Table 'EMPLEADO' created successfully.")
+    except Exception as e:
+        print("An error occurred while creating the table:")
+        print(e)
+
   
 def createTable_empleados():
     try:
@@ -31,7 +52,7 @@ def createTable_empleados():
 
 def insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion):
     
-    connection = psycopg2.connect( host="localhost", port="9999", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+    connection = psycopg2.connect( host="localhost", port="9999", database="primorda", user="primorda", password="bdaprimorda")   # Conexión a la base de datos PostgreSQL
     
     cursor = connection.cursor()
     cursor.execute("INSERT INTO empleados (id_empleado,nombre,posicion,fecha_contratacion) VALUES (%s, %s, %s, %s);", 
@@ -59,9 +80,10 @@ def readCSV_Empleados(filename):
             insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion)
        
             
+dropTable_empleados()
 createTable_empleados()
 filename="./Spark/data_Prim_ord/csv/empleados.csv"
-readCSV_Empleados(filename)
+#readCSV_Empleados(filename)
 
 
 
