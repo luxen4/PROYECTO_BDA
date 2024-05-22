@@ -20,6 +20,26 @@ if __name__ == "__main__":
         ruta_salida = "s3a://my-local-bucket/restaurantes_json"
         df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")
         
+probar
+    bucket_name = 'my-local-bucket' 
+    file_name='stores.csv'
+    df_original = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+    df_original.show()
+    
+    # Leer el archivo
+    bucket_name = 'my-local-bucket'
+    file_name='stores_json'
+    df_original = spark.read.json(f"s3a://{bucket_name}/{file_name}")
+    df_original.show()
+
+
+
+
+
+
+
+
+
         spark.stop()
 
     except Exception as e:

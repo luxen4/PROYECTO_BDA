@@ -4,8 +4,7 @@ import csv
   
 def createTable_empleados():
     try:
-        connection = psycopg2.connect(host="localhost", port="9999", 
-                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect(host="localhost", port="9999", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
         # Probar mayusculas 
          
         cursor = connection.cursor()
@@ -28,6 +27,7 @@ def createTable_empleados():
     except Exception as e:
         print("An error occurred while creating the table:")
         print(e)
+
 
 def insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion):
     
@@ -57,6 +57,7 @@ def readCSV_Empleados(filename):
             posicion = row[2]
             fecha_contratacion = row[3]
             insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion)
+       
             
 createTable_empleados()
 filename="./Spark/data_Prim_ord/csv/empleados.csv"

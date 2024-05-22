@@ -59,8 +59,6 @@ def leerPostgres():
     .json(path='s3a://my-local-bucket/hoteles_json')
     
     
-
-
     spark.stop()
 
 leerPostgres()

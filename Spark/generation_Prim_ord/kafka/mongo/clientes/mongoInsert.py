@@ -3,7 +3,9 @@ import json
 import os.path
 
 
-client = MongoClient("mongodb://root:secret@localhost:27017/")                  # Conexión al servidor de MongoDB (por defecto, se conectará a localhost en el puerto 27017)
+# client = MongoClient("mongodb://root:secret@localhost:27017/")   # Clase               # Conexión al servidor de MongoDB (por defecto, se conectará a localhost en el puerto 27017)
+client = MongoClient("mongodb://localhost:27017/") 
+
 db = client["proyecto"]                 # accede a la base de datos
 clients_collection = db["clients"]      # Accede a la colección
 
@@ -21,7 +23,7 @@ def read_json_file(filename):
 
 filename= 'Spark/data_Prim_ord/json/clientes.json'
 clients = read_json_file(filename)
-print(clients)
+#print(clients)
 clients_collection.insert_one({"clients": clients}) # Inserta la lista de clients
 
 

@@ -8,8 +8,7 @@ bucket_name = 'my-local-bucket'
 def dropTable_wClientes():
     try:
         
-        connection = psycopg2.connect(host="spark-database-1", port="5432", 
-                                      database="primord", user="primord", password="bdaprimord")   
+        connection = psycopg2.connect(host="spark-database-1", port="5432", database="primord", user="primord", password="bdaprimord")   
         cursor = connection.cursor()
         cursor.execute(""" DROP TABLE IF EXISTS w_clientes;""")
         connection.commit()
@@ -27,8 +26,7 @@ def dropTable_wClientes():
 
 def createTable_WClientes():
     try:
-        connection = psycopg2.connect(host="spark-database-1", port="5432", 
-                                      database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
+        connection = psycopg2.connect(host="spark-database-1", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
         cursor = connection.cursor()
         
         create_table_query = """
@@ -89,10 +87,17 @@ def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, prefere
 def dataframe_wcliente():
     
     try:
+        
         file_name = 'clientes_json'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
         df_clientes = df_clientes.withColumnRenamed("nombre", "nombre_cliente")
         #df_clientes.show()
+        
+        '''
+        file_name = 'clientes_csv'
+        df_clientes= spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        df_clientes = df_clientes.withColumnRenamed("nombre", "nombre_cliente")
+        #df_clientes.show()'''
         
         file_name='reservas_csv'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
@@ -115,11 +120,8 @@ def dataframe_wcliente():
       
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
-        #df = df[[col for col in df.columns if col != "id_restaurante"]]
         df = df[[col for col in df.columns if col != "direccion"]]
-        #df = df[[col for col in df.columns if col != "id_cliente"]]
-        #df = df[[col for col in df.columns if col != "id_hotel"]]
-        # Mostrar el DataFrame resultante
+       
         #df.show()
         
         # df = df.dropDuplicates()    # Eliminar registros duplicados

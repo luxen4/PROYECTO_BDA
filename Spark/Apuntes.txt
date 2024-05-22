@@ -91,9 +91,9 @@ Librerías
 # pip3 install psycopg2
 # python3 -m pip install psycopg2
 # pip3 install py2neo
-# pip install awscli-local
-
-### MONGO ## pip3 show pymongo  pip3 install --upgrade pymongo
+# pip3 install awscli-local
+# pip3 show pymongo  
+# pip3 install --upgrade pymongo
 
 
 

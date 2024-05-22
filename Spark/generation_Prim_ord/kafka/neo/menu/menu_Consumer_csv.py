@@ -24,7 +24,6 @@ df =spark  \
   .option("subscribe", "menus_stream") \
   .option("failOnDataLoss",'false') \
   .load()
-  
 
 
 schema = StructType() \
@@ -40,10 +39,7 @@ df = df.selectExpr("CAST(value AS STRING)") \
     .select("data.*")
     
 
-    
-
-# Print schema of DataFrame for debugging
-df.printSchema()
+df.printSchema()                # Print schema of DataFrame for debugging
 
 query = df \
     .writeStream \
@@ -55,6 +51,9 @@ query = df \
     .option("multiline", "true")\
     .start()
 
+# Wait for the termination of the querypython 
+query.awaitTermination()
+
 '''
 query = df \
     .writeStream \
@@ -62,7 +61,3 @@ query = df \
     .format("console") \
     .start()
 '''
- 
-
-# Wait for the termination of the querypython 
-query.awaitTermination()

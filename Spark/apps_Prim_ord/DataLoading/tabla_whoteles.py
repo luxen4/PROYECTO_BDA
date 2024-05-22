@@ -44,7 +44,6 @@ def createTable_wHoteles():
                 fecha_salida Date,
                 
                 empleados INTEGER,
-                empleados INTEGER,
                 categoria_habitacion VARCHAR (100),
                 price_habitacion DECIMAL(10,2)
             );
@@ -98,6 +97,11 @@ def dataframe_wrestaurantes():
         file_name = 'clientes_json'
         df_clientes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_clientes.show()
+        
+        '''
+        file_name = 'clientes_csv'
+        df_clientes= spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        #df_clientes.show()'''
         
         file_name='reservas_csv'
         df_reservas = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)

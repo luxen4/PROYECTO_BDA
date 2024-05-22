@@ -121,11 +121,12 @@ def dataframe_wrestaurantes():
         
          
         file_name='plato_csv'      
-        #df_platos = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        df_platos = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        
         
         
         file_name='plato_json'      
-        df_platos = spark.read.json(f"s3a://{bucket_name}/{file_name}")
+        #df_platos = spark.read.json(f"s3a://{bucket_name}/{file_name}")
         
         df_platos = df_platos.withColumnRenamed("platoID", "id_plato")   # Cambiar el nombre de la columna
         df_platos.show()

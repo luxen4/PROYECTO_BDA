@@ -6,7 +6,8 @@ import pymongo
 from pymongo import MongoClient     
 
 #client = MongoClient()                                                     # Conexión al servidor de MongoDB (por defecto, se conectará a localhost en el puerto 27017)
-mongo_client = pymongo.MongoClient("mongodb://root:secret@localhost:27017/")
+# mongo_client = pymongo.MongoClient("mongodb://root:secret@localhost:27017/")  # clase
+mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = mongo_client["proyecto"]                                               # Accede a la base de datos
 clients_collection = db["clients"]                                          # Accede a la colección 
 resultados = clients_collection.find()
@@ -17,7 +18,6 @@ producer = KafkaProducer(bootstrap_servers=['localhost:9092'], value_serializer=
 
 # Imprime los resultados
 print("Clientes Mandados:")
-
 for client in resultados:
     print(client)
     

@@ -137,6 +137,13 @@ def dataframe_wreservas():
         df = df.join(df_clientes.select("id_cliente", "nombre", "preferencias_alimenticias"), "id_cliente", "left")
         df = df.withColumnRenamed("nombre", "cliente_name")
       
+        '''
+        file_name = 'clientes_csv' 
+        df_clientes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)                                      #df_clientes.show()
+        df = df.join(df_clientes.select("id_cliente", "nombre", "preferencias_alimenticias"), "id_cliente", "left")'''
+        
+      
+      
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
         df = df[[col for col in df.columns if col != "preferencias_comida"]]
