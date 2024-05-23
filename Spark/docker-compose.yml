@@ -8,13 +8,13 @@ services:
       - "9090:8080"
       - "7077:7077"
     volumes:
-      #- ./apps_Prim_ord:/opt/spark-apps
-      #- ./data_Prim_ord:/opt/spark-data
-      #- ./generation_Prim_ord:/opt/spark-generation
+      - ./apps_Prim_ord:/opt/spark-apps
+      - ./data_Prim_ord:/opt/spark-data
+      - ./generation_Prim_ord:/opt/spark-generation
 
-      - ./apps_bda:/opt/spark-apps
-      - ./data_bda:/opt/spark-data
-      - ./generation_bda:/opt/spark-generation
+      #- ./apps_bda:/opt/spark-apps
+      #- ./data_bda:/opt/spark-data
+      #- ./generation_bda:/opt/spark-generation
 
     environment:
       - SPARK_LOCAL_IP=spark-master
@@ -38,13 +38,13 @@ services:
       - SPARK_WORKLOAD=worker
       - SPARK_LOCAL_IP=spark-worker-a
     volumes:
-      #- ./apps_Prim_ord:/opt/spark-apps
-      #- ./data_Prim_ord:/opt/spark-data
-      #- ./generation_Prim_ord:/opt/spark-generation
+      - ./apps_Prim_ord:/opt/spark-apps
+      - ./data_Prim_ord:/opt/spark-data
+      - ./generation_Prim_ord:/opt/spark-generation
 
-      - ./apps_bda:/opt/spark-apps
-      - ./data_bda:/opt/spark-data
-      - ./generation_bda:/opt/spark-generation
+      #- ./apps_bda:/opt/spark-apps
+      #- ./data_bda:/opt/spark-data
+      #- ./generation_bda:/opt/spark-generation
 
   spark-worker-b:
     build:
@@ -64,13 +64,13 @@ services:
       - SPARK_WORKLOAD=worker
       - SPARK_LOCAL_IP=spark-worker-b
     volumes:
-      #- ./apps_Prim_ord:/opt/spark-apps
-      #- ./data_Prim_ord:/opt/spark-data
-      #- ./generation_Prim_ord:/opt/spark-generation
+      - ./apps_Prim_ord:/opt/spark-apps
+      - ./data_Prim_ord:/opt/spark-data
+      - ./generation_Prim_ord:/opt/spark-generation
 
-      - ./apps_bda:/opt/spark-apps
-      - ./data_bda:/opt/spark-data
-      - ./generation_bda:/opt/spark-generation
+      #- ./apps_bda:/opt/spark-apps
+      #- ./data_bda:/opt/spark-data
+      #- ./generation_bda:/opt/spark-generation
 
   
   #database:
@@ -84,9 +84,6 @@ services:
   #    - "postgres:/var/lib/postgresql/data"
   
 
-
-
-# Tiene que funcionar                         OK
   database:
     hostname: my_postgres_service
     image: postgres
@@ -98,9 +95,6 @@ services:
       - POSTGRES_DB=primord
     volumes:
       - postgres:/var/lib/postgresql/data
-
-
-
 
 
   mongodb:
@@ -127,6 +121,7 @@ services:
       - "7687:7687" 
     volumes:
       - neo4j_data:/data
+
 
   mysql:
     image: mysql:latest

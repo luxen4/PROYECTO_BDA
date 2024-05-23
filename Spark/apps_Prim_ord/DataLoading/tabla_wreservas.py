@@ -4,6 +4,8 @@ import sessions
 spark = sessions.sesionSpark()
 bucket_name = 'my-local-bucket' 
 
+
+# Función que elimina una tabla.
 def dropTable_wReservas():
     try:
         connection = psycopg2.connect(host="spark-database-1", port="5432", 
@@ -25,7 +27,7 @@ def dropTable_wReservas():
 
 
 
-
+# Función que escribe el DataFrame en la tabla de PostgreSQL.
 def createTable_wReservas():
     try: 
         connection = psycopg2.connect(host="spark-database-1", port="5432", 
@@ -41,6 +43,7 @@ def createTable_wReservas():
                 fecha_entrada DATE,
                 fecha_salida DATE,
                 
+                id_cliente INTEGER,
                 cliente_name VARCHAR (100),
                 
                 hotel_id INTEGER,
@@ -97,7 +100,7 @@ def insertarTable_wreservas(reserva_id, fecha_entrada, fecha_salida, cliente_nam
     print("Datos cargados correctamente en tabla w_reservas.")
 '''    
      
-     
+# Función que elabora un dataframe a partir de atributos de distintos archivos.  
 def dataframe_wreservas():
 
     try:
@@ -108,50 +111,50 @@ def dataframe_wreservas():
         
         
         file_name='restaurantes_json'      
-        df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar
+        df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}") 
         #df_restaurantes.show()
-        
-        
-        df = df_reservas.join(df_restaurantes.select("id_restaurante","nombre","id_hotel"), "id_restaurante", "left")  #### METER UN NOMBRE DE MENU
-        df = df.withColumnRenamed("nombre", "restaurante_name")                                             # Cambiar el nombre de la columna
+        df = df_reservas.join(df_restaurantes.select("id_restaurante","nombre","id_hotel"), "id_restaurante", "left")  # METER UN NOMBRE DE MENU
+        df = df.withColumnRenamed("nombre", "restaurante_name")  # Cambiar el nombre de la columna
         #df.show()
         
 
         file_name = 'hoteles_json'
-        df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}") # No tocar                          #df_hoteles.show()
-        df = df.join(df_hoteles.select("id_hotel","nombre_hotel","empleados"), "id_hotel", "left")          #df.show()
+        df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}")                           
+        #df_hoteles.show()
+        df = df.join(df_hoteles.select("id_hotel","nombre_hotel","empleados"), "id_hotel", "left")          
+        #df.show()
         
     
         file_name = 'habitaciones_csv' 
         df_habitaciones = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-        df_habitaciones = df_habitaciones.withColumnRenamed("numero_habitacion", "habitacion_id")           #df_habitaciones.show()  
-                                                                                                            # Cambiar el nombre de la columna
-        
-        
-        # Me vuelves loco Rafa con no llamar a columnas iguales, con nombres iguales (o la práctica se está gestando todavía o vamos a pillar ;) )
-        df = df.join(df_habitaciones.select("habitacion_id","categoria","tarifa_por_noche"), "habitacion_id", "left")   #df.show()
+        df_habitaciones = df_habitaciones.withColumnRenamed("numero_habitacion", "habitacion_id")  # Cambiar el nombre de la columna          
+        #df_habitaciones.show()                                                                                            
+        df = df.join(df_habitaciones.select("habitacion_id","categoria","tarifa_por_noche"), "habitacion_id", "left")   
+        #df.show()
         
         
         file_name = 'clientes_json' 
-        df_clientes = spark.read.json(f"s3a://{bucket_name}/{file_name}")                                               #df_clientes.show()
+        df_clientes = spark.read.json(f"s3a://{bucket_name}/{file_name}")                                               
+        #df_clientes.show()
         df = df.join(df_clientes.select("id_cliente", "nombre", "preferencias_alimenticias"), "id_cliente", "left")
         df = df.withColumnRenamed("nombre", "cliente_name")
       
+        
         '''
         file_name = 'clientes_csv' 
-        df_clientes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)                                      #df_clientes.show()
+        df_clientes = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)                                      
+        # df_clientes.show()
         df = df.join(df_clientes.select("id_cliente", "nombre", "preferencias_alimenticias"), "id_cliente", "left")'''
         
-      
       
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
         df = df[[col for col in df.columns if col != "preferencias_comida"]]
         df = df[[col for col in df.columns if col != "id_cliente"]]
-       
-        #df.show()
         df = df.dropDuplicates()    # Eliminar registros duplicados
-       
+        #df.show()
+        
+       # Modo de inserción sin JDBC
         '''
         # No tocar que es OK
         for row in df.select("*").collect():

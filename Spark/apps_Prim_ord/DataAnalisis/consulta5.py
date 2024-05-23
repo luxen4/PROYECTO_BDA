@@ -1,5 +1,3 @@
-#import sessions
-#spark = sessions.sesionSpark()
 
 jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"
 connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
@@ -46,49 +44,3 @@ def select_IngresosGenerados(spark):
                                     GROUP BY nombre_hotel
                                     ORDER BY cuantia desc; """)
     df_resultado.show()
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-#print("¿Cuál es el índice de ocupación de cada hotel?")
-#select1()
-
-#print("¿Cuál es el índice de ocupación de cada hotel según la categoría de habitación?")
-#select2()
-
-#print("¿Cuál es el índice de ocupación de cada hotel según la categoría de habitación?")
-#select3(spark)
-
-
-#spark.stop()
-
-
-
-# ¿Cuántas reservas se hicieron para cada categoría de habitación?
-
-# "5.2.5 Ocupación e ingresos del hotel \n" 
-# "¿Podemos estimar los ingresos generados por cada hotel basándonos en los \n" +
-# "precios de las habitaciones y los índices de ocupación?"

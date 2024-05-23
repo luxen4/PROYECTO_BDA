@@ -13,6 +13,7 @@ def reservas_DuracionMediaTotal(spark):
     df_resultado.show()
     
     
+    
 def reservas_PorSemanas(spark):
     print("Número de reservas por Semanas")
 
@@ -38,6 +39,8 @@ def reservas_porDia(spark):
                                 ORDER BY num_reservas DESC
                                 LIMIT 5; """) # dia
     df_resultado.show()
+
+
    
 def reservas_porMes(spark):
     print("Número de reservas por meses")
@@ -49,6 +52,7 @@ def reservas_porMes(spark):
                                     ORDER BY num_reservas DESC
                                     LIMIT 5; """) # mes
     df_resultado.show()
+
 
 
 def reservas_porAño(spark):
@@ -63,6 +67,8 @@ def reservas_porAño(spark):
                                     ORDER BY num_reservas DESC
                                     LIMIT 5;""") 
     df_resultado.show()
+
+
 
 '''
 def reservas_Otro(spark):

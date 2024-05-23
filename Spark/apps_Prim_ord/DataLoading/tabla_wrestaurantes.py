@@ -4,6 +4,7 @@ import sessions
 spark = sessions.sesionSpark()
 bucket_name = 'my-local-bucket' 
 
+# Función que elimina una tabla.
 def dropTable_wRestaurantes():
     try:
         connection = psycopg2.connect(host="spark-database-1", port="5432", 
@@ -24,6 +25,7 @@ def dropTable_wRestaurantes():
         print(e)  
 
 
+# Función que crea una tabla.
 def createTable_wRestaurantes():
     try:
         connection = psycopg2.connect(host="spark-database-1", port="5432", 
@@ -48,7 +50,7 @@ def createTable_wRestaurantes():
                 ingredientes VARCHAR (100),
                 alergenos VARCHAR (100)
             );
-        """
+        """  
         #  menu_name VARCHAR (100),
                                                                                    
         cursor.execute(create_table_query)
@@ -63,7 +65,7 @@ def createTable_wRestaurantes():
         print(e)  
 
 
-# Escribe el DataFrame en la tabla de PostgreSQL
+# Función que escribe el DataFrame en la tabla de PostgreSQL.
 def insertJDBC(df):
     jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"    # Desde dentro es en nombre del contenedor y su puerto
     connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
@@ -88,7 +90,7 @@ def insertarTable_wrestaurantes(id_reserva, restaurante_id, restaurante_name, id
     print("Datos cargados correctamente en tabla w_restaurantes.")
 '''     
      
-     
+# Función que elabora un dataframe a partir de atributos de distintos archivos.  
 def dataframe_wrestaurantes():
 
     try:
@@ -119,15 +121,15 @@ def dataframe_wrestaurantes():
         #df_relaciones.show()
         df = df.join(df_relaciones.select("id_menu","id_plato"), "id_menu", "left")
         
-         
-        file_name='plato_csv'      
-        df_platos = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        
+        # No descomentar
+        #file_name='plato_csv'      
+        #df_platos = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
         
         
         
         file_name='plato_json'      
-        #df_platos = spark.read.json(f"s3a://{bucket_name}/{file_name}")
-        
+        df_platos = spark.read.json(f"s3a://{bucket_name}/{file_name}")
         df_platos = df_platos.withColumnRenamed("platoID", "id_plato")   # Cambiar el nombre de la columna
         df_platos.show()
         df = df.join(df_platos.select("id_plato","nombre","ingredientes","alergenos"), "id_plato", "left") #### METER UN NOMBRE DE MENU
@@ -142,6 +144,9 @@ def dataframe_wrestaurantes():
       
         df = df.dropDuplicates()    # Eliminar registros duplicados
         df.show()
+        
+        
+        # Modo de inserción sin JDBC
         '''
         for row in df.select("*").collect():
             print(row)
@@ -180,3 +185,6 @@ dataframe_wrestaurantes()
 ###
 
 spark.stop()
+
+# id_registro | id_reserva | restaurante_id | restaurante_name | id_menu | menu_price | plato_id | plato_name | ingredientes | alergenos 
+# -------------+------------+----------------+------------------+---------+------------+----------+------------+--------------+-----------

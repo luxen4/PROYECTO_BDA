@@ -63,65 +63,72 @@ salir='no'
 while salir != 'si':
     
     informacion()
-    opcion = int(input("\n Selecciona una opción: \n"))
+    try:
+        
+        opcion = int(input("\n Selecciona una opción: \n"))
+        print(opcion)
+        
+        if opcion == 1:
+            import consulta1
+            consulta1.select(spark)
+            
+        elif opcion == 2:
+            import consulta2
+            consulta2.select1(spark)
+            consulta2.select2(spark)
+            
+        elif opcion == 3:
+            import consulta3
+            consulta3.reservas_DuracionMediaTotal(spark)
+            consulta3.reservas_porDia(spark)
+            consulta3.reservas_PorSemanas(spark)
+            consulta3.reservas_porMes(spark)
+            consulta3.reservas_porAño(spark)
+            
+        elif opcion == 4:
+            import consulta4
+            consulta4.select(spark)
+            
+        elif opcion == 5:
+            import consulta5
+            consulta5.select_IndiceOcupacion(spark)
+            consulta5.select(spark,'Economica')
+            consulta5.select(spark,'Estandar')
+            consulta5.select(spark,'Deluxe')
+            
+            consulta5.select_IngresosGenerados(spark)
+            
+        elif opcion == 6:
+            import consulta6
+            consulta6.platosPopulares(spark)
+            consulta6.frecuenciaAlergenos(spark)
+            consulta6.ingredientesComunes(spark)
+        
+        elif opcion == 7:
+            import consulta7
+            consulta7.select0(spark)
+            consulta7.select(spark)
+            
+        elif opcion == 8:
+            import consulta8
+            consulta8.select(spark)
+            consulta8.select2(spark)
+            
+        elif opcion == 9:
+            print("¿Cómo se comparan los precios de las habitaciones de los distintos hoteles existen valores atípicos?")
+            import consulta9
+            consulta9.init(spark)
+        
+            
+        if opcion == 99:
+            print("\n                                               *** Adios *** \n")
+            salir="si"
+            break
+        
     
-    if opcion == 1:
-        import consulta1
-        consulta1.select(spark)
-        
-    elif opcion == 2:
-        import consulta2
-        consulta2.select1(spark)
-        consulta2.select2(spark)
-        
-    elif opcion == 3:
-        import consulta3
-        consulta3.reservas_DuracionMediaTotal(spark)
-        consulta3.reservas_porDia(spark)
-        consulta3.reservas_PorSemanas(spark)
-        consulta3.reservas_porMes(spark)
-        consulta3.reservas_porAño(spark)
-        
-    elif opcion == 4:
-        import consulta4
-        consulta4.select(spark)
-        
-    if opcion == 5:
-        import Spark.apps_Prim_ord.DataAnalisis.consulta5 as consulta5
-        consulta5.select_IndiceOcupacion(spark)
-        consulta5.select(spark,'Economica')
-        consulta5.select(spark,'Estandar')
-        consulta5.select(spark,'Deluxe')
-        
-        consulta5.select_IngresosGenerados(spark)
-        
-    elif opcion == 6:
-        import consulta6
-        consulta6.platosPopulares(spark)
-        consulta6.frecuenciaAlergenos(spark)
-        consulta6.ingredientesComunes(spark)
-    elif opcion == 7:
-        
-        import Spark.apps_Prim_ord.DataAnalisis.consulta7 as consulta7
-        consulta7.select0(spark)
-        consulta7.select(spark)
-    elif opcion == 8:
-        import consulta8
-        consulta8.select(spark)
-        consulta8.select2(spark)
-    elif opcion == 9:
-        print("¿Cómo se comparan los precios de las habitaciones de los distintos hoteles existen valores atípicos?")
-        import consulta9
-        consulta9.init(spark)
-       
-        
-    elif opcion == 99:
-        print("\n                                               *** Adios *** \n")
-        salir="si"
-        break
-    else:
-        print("Opción no válida")
-        
+    except Exception as e: 
+        print(e)
+        print("opción no válida")    
 
     salir = input("\n Quiere salir? \n")
 

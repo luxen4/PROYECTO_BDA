@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 
+# Función que devuelve una sesión de Spark
 def sesionSpark():
     spark = SparkSession.builder \
         .appName("Leer y procesar con Spark") \

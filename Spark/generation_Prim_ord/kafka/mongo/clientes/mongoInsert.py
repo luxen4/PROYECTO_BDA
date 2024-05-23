@@ -2,8 +2,8 @@ from pymongo import MongoClient
 import json
 import os.path
 
-
-# client = MongoClient("mongodb://root:secret@localhost:27017/")   # Clase               # Conexión al servidor de MongoDB (por defecto, se conectará a localhost en el puerto 27017)
+# Conexión al servidor de MongoDB (por defecto, se conectará a localhost en el puerto 27017)
+# client = MongoClient("mongodb://root:secret@localhost:27017/")   # Clase               
 client = MongoClient("mongodb://localhost:27017/") 
 
 db = client["proyecto"]                 # accede a la base de datos

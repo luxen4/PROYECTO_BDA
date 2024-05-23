@@ -52,7 +52,7 @@ def createTable_empleados():
 
 def insertar_Empleados(id_empleado,nombre,posicion,fecha_contratacion):
     
-    connection = psycopg2.connect( host="localhost", port="9999", database="primorda", user="primorda", password="bdaprimorda")   # Conexión a la base de datos PostgreSQL
+    connection = psycopg2.connect( host="localhost", port="9999", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
     
     cursor = connection.cursor()
     cursor.execute("INSERT INTO empleados (id_empleado,nombre,posicion,fecha_contratacion) VALUES (%s, %s, %s, %s);", 
@@ -83,7 +83,7 @@ def readCSV_Empleados(filename):
 dropTable_empleados()
 createTable_empleados()
 filename="./Spark/data_Prim_ord/csv/empleados.csv"
-#readCSV_Empleados(filename)
+readCSV_Empleados(filename)
 
 
 

@@ -13,6 +13,7 @@ def platosPopulares(spark):
     df_resultado.show()
     
     
+    
 def frecuenciaAlergenos(spark):
     print("¿Hay alérgenos comunes que aparezcan con frecuencia en los platos?")
     df = spark.read.jdbc(url=jdbc_url, table="w_restaurantes", properties=connection_properties)
@@ -22,6 +23,7 @@ def frecuenciaAlergenos(spark):
                                 group by alergenos
                                 order by veces desc ;""")
     df_resultado.show()
+
 
 
 def ingredientesComunes(spark):

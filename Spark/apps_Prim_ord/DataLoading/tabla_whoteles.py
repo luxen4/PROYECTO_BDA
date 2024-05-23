@@ -4,6 +4,7 @@ from pyspark.sql.functions import size, regexp_replace, split
 
 spark = sessions.sesionSpark()
 
+# Función que elimina una tabla.
 def dropTable_wHoteles():
     try:
         
@@ -23,7 +24,7 @@ def dropTable_wHoteles():
 
 
 
-
+#Función que crea una tabla.
 def createTable_wHoteles():
     try:
         
@@ -61,7 +62,7 @@ def createTable_wHoteles():
         print(e)    
 
 
-# Escribe el DataFrame en la tabla de PostgreSQL
+# Función que escribe el DataFrame en la tabla de PostgreSQL.
 def insertJDBC(df):
     jdbc_url = "jdbc:postgresql://spark-database-1:5432/primord"    # Desde dentro es en nombre del contenedor y su puerto
     connection_properties = {"user": "primord", "password": "bdaprimord", "driver": "org.postgresql.Driver"}
@@ -86,10 +87,9 @@ def insertarTable_whoteles(hotel_id, hotel_name, reserva_id, fecha_llegada, fech
     print("Datos cargados correctamente en tabla w_restaurantes.")
 '''
      
+# Escribe el DataFrame en la tabla de PostgreSQL
 def dataframe_wrestaurantes():
     
-    #spark = sessions.sesionSpark()
-    #spark = sessions.sesionSpark()
     bucket_name = 'my-local-bucket' 
 
     try:
@@ -141,6 +141,7 @@ def dataframe_wrestaurantes():
         
         df = df.dropDuplicates()    # Eliminar registros duplicados
         
+        # Modo de inserción sin JDBC
         '''
         for row in df.select("*").collect():
             print(row) hotel_id=row["id_hotel"]
@@ -176,13 +177,7 @@ def dataframe_wrestaurantes():
 
 
 ###
-
-
 dropTable_wHoteles()
 createTable_wHoteles()
 dataframe_wrestaurantes()
 ###
-
-
-# Archivo que crea la tabla
-# fORMA UN DATAFRAME para insertar los registros mediante JDBC

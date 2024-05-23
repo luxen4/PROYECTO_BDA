@@ -4,7 +4,7 @@ import sessions
 spark = sessions.sesionSpark()
 bucket_name = 'my-local-bucket' 
 
-
+# Función que elimina una tabla.
 def dropTable_wClientes():
     try:
         
@@ -23,7 +23,7 @@ def dropTable_wClientes():
 
 
 
-
+# Función que crea una tabla.
 def createTable_WClientes():
     try:
         connection = psycopg2.connect(host="spark-database-1", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
@@ -67,6 +67,7 @@ def insertJDBC(df):
     df.write.jdbc(url=jdbc_url, table=table_name, mode="overwrite", properties=connection_properties) # mode="append"
        
 
+'''
 def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, preferencias_comida, nombre_hotel):
     
     connection = psycopg2.connect( host="my_postgres_service", port="5432", database="primord", user="primord", password="bdaprimord")   # Conexión a la base de datos PostgreSQL
@@ -81,9 +82,9 @@ def insertarTable_wcliente( nombre_cliente, fecha_llegada, fecha_salida, prefere
     connection.close()
 
     print("Datos cargados correctamente en tabla Cliente.")
-  
+'''
      
-     
+# Escribe el DataFrame en la tabla de PostgreSQL    
 def dataframe_wcliente():
     
     try:
@@ -104,27 +105,24 @@ def dataframe_wcliente():
         df = df_clientes.join(df_reservas.select("id_cliente","id_restaurante","fecha_llegada","fecha_salida","tipo_habitacion","preferencias_comida"), "id_cliente", "left")
         #df.show()
         
-        
         file_name = 'restaurantes_json' 
         df_restaurantes= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_restaurantes.show()
         df = df.join(df_restaurantes.select("id_restaurante","id_hotel"), "id_restaurante", "left")
         
-        
         file_name = 'hoteles_json' 
         df_hoteles= spark.read.json(f"s3a://{bucket_name}/{file_name}")
         #df_hoteles.show()
         df = df.join(df_hoteles.select("id_hotel","nombre_hotel"), "id_hotel", "left")
-        df.show()
        
       
         # Eliminar columnas"
         df = df[[col for col in df.columns if col != "timestamp"]]
         df = df[[col for col in df.columns if col != "direccion"]]
        
-        #df.show()
+        df.show()
         
-        # df = df.dropDuplicates()    # Eliminar registros duplicados
+        df = df.dropDuplicates()    # Eliminar registros duplicados
         
         for row in df.select("*").collect():
             print(row)

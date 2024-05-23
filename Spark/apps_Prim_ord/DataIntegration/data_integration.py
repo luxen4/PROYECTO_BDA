@@ -20,39 +20,25 @@ if __name__ == "__main__":
         ruta_salida = "s3a://my-local-bucket/restaurantes_json"
         df.write.option("multiline", "true").json(ruta_salida, mode="overwrite")
         
-probar
-    bucket_name = 'my-local-bucket' 
-    file_name='stores.csv'
-    df_original = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
-    df_original.show()
-    
-    # Leer el archivo
-    bucket_name = 'my-local-bucket'
-    file_name='stores_json'
-    df_original = spark.read.json(f"s3a://{bucket_name}/{file_name}")
-    df_original.show()
-
-
-
-
-
-
-
-
+        
+        # Leer un archivo de S3
+        bucket_name = 'my-local-bucket' 
+        file_name='habitaciones_csv'
+        df_original = spark.read.csv(f"s3a://{bucket_name}/{file_name}", header=True, inferSchema=True)
+        df_original.show()
+        
+        # Leer un archivo de S3
+        bucket_name = 'my-local-bucket'
+        file_name='restaurantes_json'
+        df_original = spark.read.json(f"s3a://{bucket_name}/{file_name}")
+        df_original.show()
+        
 
         spark.stop()
 
     except Exception as e:
         print("error reading TXT")
         print(e)
-
-
-# Tenemos los archivos que se subirán directamente a S3
-#       habitaciones.csv  y  restaurantes.json  
-#Las rutas son desde dentro del cluster 
-
-# awslocal s3api create-bucket --bucket my-local-bucket
-# awslocal s3 ls s3://my-local-bucket
      
 
 
